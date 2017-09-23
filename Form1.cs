@@ -15,6 +15,13 @@ namespace PagoAgilFrba
         public Form1()
         {
             InitializeComponent();
+            using (Entities db = new Entities())
+            {
+                List<Role> roles = db.Role.Where((r) => r.role_active == true).ToList<Role>();
+
+                MessageBox.Show("Cantidad de roles activos en DB " + roles.Count);
+            }
+
         }
     }
 }
