@@ -12,19 +12,18 @@ namespace PagoAgilFrba
     using System;
     using System.Collections.Generic;
     
-    public partial class Role
+    public partial class Users
     {
-        public Role()
+        public Users()
         {
-            this.Funcionality = new HashSet<Funcionality>();
-            this.Users = new HashSet<Users>();
+            this.Branch = new HashSet<Branch>();
+            this.Role = new HashSet<Role>();
         }
     
-        public string role_name { get; set; }
-        public bool role_active { get; set; }
-        public int role_id { get; set; }
+        public string user_username { get; set; }
+        public string user_password { get; set; }
     
-        public virtual ICollection<Funcionality> Funcionality { get; set; }
-        public virtual ICollection<Users> Users { get; set; }
+        public virtual ICollection<Branch> Branch { get; set; }
+        public virtual ICollection<Role> Role { get; set; }
     }
 }

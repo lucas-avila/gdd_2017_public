@@ -25,7 +25,9 @@ namespace PagoAgilFrba
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<Branch> Branch { get; set; }
         public DbSet<Funcionality> Funcionality { get; set; }
         public DbSet<Role> Role { get; set; }
+        public DbSet<Users> Users { get; set; }
     }
 }
