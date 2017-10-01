@@ -16,8 +16,8 @@ GO
 create table GDD_FORK.Role_user (user_id varchar(150) not null ,role_id int not null, constraint Role_user_PK primary key(user_id,role_id),foreign key (role_id) references GDD_FORK.Role(role_id),foreign key (user_id) references GDD_FORK.Users(user_username))
 GO
 
-create table GDD_FORK.Branch(branch_name varchar(150) not null, branch_address varchar(200) not null, branch_postal_code int not null, constraint Branch_PK primary key(branch_name) )
+create table GDD_FORK.Branch(branch_name nvarchar(50) not null, branch_address nvarchar(50) not null, branch_postal_code numeric(18,0) not null, constraint Branch_PK primary key(branch_name) )
 GO
 
-create table gdd_fork.Branch_user (branch_id VARCHAR(150) NOT NULL,user_id   VARCHAR(150) NOT NULL, constraint branch_user_pk primary key (branch_id, user_id), foreign key (branch_id) references gdd_fork.Branch(branch_name),foreign key (user_id) references gdd_fork.Users (user_username)) 
+create table GDD_FORK.Branch_user (branch_id NVARCHAR(50) NOT NULL,user_id VARCHAR(150) NOT NULL, constraint branch_user_pk primary key (branch_id, user_id), foreign key (branch_id) references gdd_fork.Branch(branch_name),foreign key (user_id) references GDD_FORK.Users (user_username)) 
 GO
