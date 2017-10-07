@@ -53,7 +53,7 @@ GO
 
 CREATE TABLE GDD_FORK.Entry (
 	ent_id int identity NOT NULL,
-	ent_description nvarchar(150) NOT NULL,
+	ent_description nvarchar(255) NOT NULL,
 	CONSTRAINT Entry_PK PRIMARY KEY (ent_id))
 GO
 
