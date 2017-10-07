@@ -99,7 +99,9 @@ GO
 CREATE TABLE GDD_FORK.Bill_Refund (
 	bill_id numeric(18, 0) NOT NULL,
 	refund_id int NOT NULL,
-	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id))
+	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id),
+	FOREIGN KEY (bill_id) REFERENCES GDD_FORK.Bill(bill_id),
+	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
 GO
 
 CREATE TABLE GDD_FORK.BillRefund (
@@ -111,7 +113,9 @@ GO
 CREATE TABLE GDD_FORK.Invoice_Refund (
 	invoice_id numeric(18, 0) NOT NULL,
 	refund_id int NOT NULL,
-	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id))
+	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id)
+	FOREIGN KEY (invoice_id) REFERENCES GDD_FORK.Invoice(inv_nro),
+	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.InvoiceRefund(ref_id))
 GO
 
 CREATE TABLE GDD_FORK.InvoiceRefund (
@@ -123,10 +127,10 @@ GO
 CREATE TABLE GDD_FORK.Bill (
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
-	bill_com_cuit nvarchar(50) NOT NULL, /*bill_com_dni??*/
+	bill_com_cuit nvarchar(50) NOT NULL, 
 	bill_ref_id numeric(18, 0) NOT NULL,
 	bill_inv_nro numeric(18, 0) NOT NULL,
-	bill_date datetime NOT NULL, 	/*Bill ggggggates.*/
+	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
 	CONSTRAINT Bill_PK PRIMARY KEY (bill_number),
