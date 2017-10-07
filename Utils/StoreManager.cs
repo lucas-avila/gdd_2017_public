@@ -18,14 +18,20 @@ namespace PagoAgilFrba.Utils{
         }
     }
 
+    class DefaultMapper : StoreResultMapper<Dictionary<String, Object>> {
+        public Dictionary<String, Object> getMapped(Dictionary<string, object> row) {
+            return row;
+        }
+    }
+
     class StoreManager{
 
         private static StoreManager instance;
-        private static SqlConnection connection;
+        private static String connectionString;
         private static String schema = ConfigurationManager.AppSettings["schema"];
 
-        private StoreManager(String connectionString) {
-            connection = new SqlConnection(connectionString);
+        private StoreManager(String stringProperty) {
+            connectionString = stringProperty;
         }
 
         public static StoreManager getInstance() {
@@ -35,8 +41,16 @@ namespace PagoAgilFrba.Utils{
             return instance;
         }
 
-        public List<Dictionary<String,Object>> executeReadStore(String name,List<Parameter> parameters = null) {
-            using (connection) {
+        private SqlConnection getConnection() {
+            return new SqlConnection(connectionString);
+        }
+
+        public List<Dictionary<String,Object>> executeReadStore(String name,List<Parameter> parameters = null){
+            return executeReadStore<Dictionary<String,Object>>(name,new DefaultMapper(),parameters);
+        }
+
+        public List<T> executeReadStore<T>(String name,StoreResultMapper<T> mapper,List<Parameter> parameters = null) {
+            using (SqlConnection connection = getConnection()){
                 if (parameters == null){
                     parameters = new List<Parameter>(); 
                 }
@@ -47,7 +61,7 @@ namespace PagoAgilFrba.Utils{
                     command.Parameters.Add(new SqlParameter(parameter.key, parameter.value));
                 }
                 SqlDataReader dr = command.ExecuteReader();
-                List<Dictionary<String,Object>> result = new List<Dictionary<String,Object>>();
+                List<T> result = new List<T>();
 
                 using (dr){
                     List<String> columnNames = Enumerable.Range(0, dr.FieldCount).Select(dr.GetName).ToList();
@@ -57,12 +71,20 @@ namespace PagoAgilFrba.Utils{
                         foreach(var columnName in columnNames){
                             row.Add(columnName, dr[columnName]);
                         }
-                        result.Add(row);
+                        result.Add(mapper.getMapped(row));
                     }
                 }
                 return result;
             }
 
+        }
+
+        public T executeReadSingleResult<T>(String name, StoreResultMapper<T> mapper, List<Parameter> parameters = null) {
+            List<T> list = executeReadStore<T>(name, mapper, parameters);
+            if (list.Count == 1) { 
+                return list[0];
+            }
+            return default(T);
         }
 
     }

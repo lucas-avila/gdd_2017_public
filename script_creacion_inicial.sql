@@ -21,3 +21,12 @@ GO
 
 create table GDD_FORK.Branch_user (branch_id NVARCHAR(50) NOT NULL,user_id VARCHAR(150) NOT NULL, constraint branch_user_pk primary key (branch_id, user_id), foreign key (branch_id) references gdd_fork.Branch(branch_name),foreign key (user_id) references GDD_FORK.Users (user_username)) 
 GO
+
+--stores procedures
+
+create procedure GDD_FORK.sp_get_user (@username varchar(150))
+as
+	begin
+		select * from GDD_FORK.Users where user_username=@username
+	end
+GO
