@@ -18,7 +18,6 @@ namespace PagoAgilFrba
         public LoginForm()
         {
             InitializeComponent();
-            Clipboard.SetText(Crypto.encrypt("admin"));
         }
 
         private void btnLogin_Click(object sender, EventArgs e){
