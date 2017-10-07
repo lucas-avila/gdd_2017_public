@@ -96,32 +96,11 @@ CREATE TABLE GDD_FORK.Payment_Method (
 	CONSTRAINT Payment_Method_PK PRIMARY KEY (paym_id))
 GO
 
-CREATE TABLE GDD_FORK.Bill_Refund (
-	bill_id numeric(18, 0) NOT NULL,
-	refund_id int NOT NULL,
-	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id),
-	FOREIGN KEY (bill_id) REFERENCES GDD_FORK.Bill(bill_id),
-	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
-GO
 
 CREATE TABLE GDD_FORK.BillRefund (
 	ref_id int identity NOT NULL,
 	ref_reason nvarchar(255) NOT NULL,
 	CONSTRAINT BillRefund_PK PRIMARY KEY (ref_id))
-GO
-
-CREATE TABLE GDD_FORK.Invoice_Refund (
-	invoice_id numeric(18, 0) NOT NULL,
-	refund_id int NOT NULL,
-	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id)
-	FOREIGN KEY (invoice_id) REFERENCES GDD_FORK.Invoice(inv_nro),
-	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.InvoiceRefund(ref_id))
-GO
-
-CREATE TABLE GDD_FORK.InvoiceRefund (
-	ref_id int identity NOT NULL,
-	ref_reason nvarchar(255) NOT NULL,
-	CONSTRAINT InvoiceRefund_PK PRIMARY KEY (ref_id))
 GO
 
 CREATE TABLE GDD_FORK.Bill (
@@ -136,8 +115,30 @@ CREATE TABLE GDD_FORK.Bill (
 	CONSTRAINT Bill_PK PRIMARY KEY (bill_number),
 	FOREIGN KEY (bill_cli_dni) REFERENCES GDD_FORK.Client(cli_dni),
 	FOREIGN KEY (bill_com_cuit) REFERENCES GDD_FORK.Company(com_cuit),
-	FOREIGN KEY (bill_ref_id) REFERENCES GDD_FORK.BillRefund(ref_id),
 	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro))
+GO
+
+CREATE TABLE GDD_FORK.Bill_Refund (
+	bill_id numeric(18, 0) NOT NULL,
+	refund_id int NOT NULL,
+	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id),
+	FOREIGN KEY (bill_id) REFERENCES GDD_FORK.Bill(bill_number),
+	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
+GO
+
+
+CREATE TABLE GDD_FORK.InvoiceRefund (
+	ref_id int identity NOT NULL,
+	ref_reason nvarchar(255) NOT NULL,
+	CONSTRAINT InvoiceRefund_PK PRIMARY KEY (ref_id))
+GO
+
+CREATE TABLE GDD_FORK.Invoice_Refund (
+	invoice_id numeric(18, 0) NOT NULL,
+	refund_id int NOT NULL,
+	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id),
+	FOREIGN KEY (invoice_id) REFERENCES GDD_FORK.Invoice(inv_nro),
+	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.InvoiceRefund(ref_id))
 GO
 
 CREATE TABLE GDD_FORK.Payment (
