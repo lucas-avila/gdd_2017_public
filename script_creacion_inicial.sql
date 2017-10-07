@@ -124,7 +124,7 @@ CREATE TABLE GDD_FORK.Bill (
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
 	bill_com_cuit nvarchar(50) NOT NULL, /*bill_com_dni??*/
-	bill_ref_id numeric(18, 0) NOT NULL,
+	bill_ref_id int NOT NULL,
 	bill_inv_nro numeric(18, 0) NOT NULL,
 	bill_date datetime NOT NULL, 	/*Bill ggggggates.*/
 	bill_total numeric(18, 2) NOT NULL,
