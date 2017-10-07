@@ -53,7 +53,7 @@ GO
 
 CREATE TABLE GDD_FORK.Entry (
 	ent_id int identity NOT NULL,
-	ent_description varchar(150) NOT NULL,
+	ent_description nvarchar(150) NOT NULL,
 	CONSTRAINT Entry_PK PRIMARY KEY (ent_id))
 GO
 
@@ -69,25 +69,25 @@ GO
 CREATE TABLE GDD_FORK.Invoice (
 	inv_nro numeric(18, 0) NOT NULL,
 	inv_date datetime NOT NULL,
-	inv_amount numeric NOT NULL,
+	inv_amount numeric(18, 2) NOT NULL,
 	inv_total numeric(18, 2) NOT NULL,
 	inv_fee_percentage numeric NOT NULL,
-	inv_subtotal numeric NOT NULL,
-	inv_company_cuit nvarchar(255) NOT NULL, 
+	inv_subtotal numeric(18, 2) NOT NULL,
+	inv_company_cuit nvarchar(50) NOT NULL, 
 	CONSTRAINT Invoice_PK PRIMARY KEY (inv_nro),
 	FOREIGN KEY (inv_company_cuit) REFERENCES GDD_FORK.Company(com_cuit))
 GO
 
 CREATE TABLE GDD_FORK.Client (
 	cli_id int identity NOT NULL,
-	clid_dni numeric(18, 0) NOT NULL,
+	cli_dni numeric(18, 0) NOT NULL,
 	cli_name nvarchar(255) NOT NULL,
 	cli_last_name nvarchar(255) NOT NULL,
 	cli_date_birth datetime NOT NULL,
 	cli_email nvarchar(255),
 	cli_address nvarchar(255) NOT NULL,
 	cli_postal_code nvarchar(255) NOT NULL,
-	CONSTRAINT Client_PK PRIMARY KEY (cli_id, cli_dni))
+	CONSTRAINT Client_PK PRIMARY KEY (cli_dni))
 GO
 
 CREATE TABLE GDD_FORK.Payment_Method (
@@ -96,10 +96,34 @@ CREATE TABLE GDD_FORK.Payment_Method (
 	CONSTRAINT Payment_Method_PK PRIMARY KEY (paym_id))
 GO
 
+CREATE TABLE GDD_FORK.Bill_Refund (
+	bill_id numeric(18, 0) NOT NULL,
+	refund_id int NOT NULL,
+	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id))
+GO
+
+CREATE TABLE GDD_FORK.BillRefund (
+	ref_id int identity NOT NULL,
+	ref_reason nvarchar(255) NOT NULL,
+	CONSTRAINT BillRefund_PK PRIMARY KEY (ref_id))
+GO
+
+CREATE TABLE GDD_FORK.Invoice_Refund (
+	invoice_id numeric(18, 0) NOT NULL,
+	refund_id int NOT NULL,
+	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id))
+GO
+
+CREATE TABLE GDD_FORK.InvoiceRefund (
+	ref_id int identity NOT NULL,
+	ref_reason nvarchar(255) NOT NULL,
+	CONSTRAINT InvoiceRefund_PK PRIMARY KEY (ref_id))
+GO
+
 CREATE TABLE GDD_FORK.Bill (
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
-	bill_com_cuit nvarchar(255) NOT NULL, /*bill_com_dni??*/
+	bill_com_cuit nvarchar(50) NOT NULL, /*bill_com_dni??*/
 	bill_ref_id numeric(18, 0) NOT NULL,
 	bill_inv_nro numeric(18, 0) NOT NULL,
 	bill_date datetime NOT NULL, 	/*Bill ggggggates.*/
@@ -124,4 +148,13 @@ CREATE TABLE GDD_FORK.Payment (
 	FOREIGN KEY (pay_bill_number) REFERENCES GDD_FORK.Bill(bill_number),
 	FOREIGN KEY (pay_branch_name) REFERENCES GDD_FORK.Branch(branch_name),
 	FOREIGN KEY (pay_paym_id) REFERENCES GDD_FORK.Payment_Method(paym_id))
+GO
+
+CREATE TABLE GDD_FORK.Item (
+	it_number int identity NOT NULL,
+	it_bill_number numeric(18, 0) NOT NULL,
+	it_amount numeric(18, 2) NOT NULL,
+	it_quantity numeric(18, 0) NOT NULL,
+	CONSTRAINT Item_PK PRIMARY KEY (it_number, it_bill_number),
+	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
 GO
