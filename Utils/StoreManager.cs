@@ -55,11 +55,7 @@ namespace PagoAgilFrba.Utils{
                     parameters = new List<Parameter>(); 
                 }
                 connection.Open();
-                SqlCommand command = new SqlCommand(schema+"." + name, connection);
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                foreach (var parameter in parameters){
-                    command.Parameters.Add(new SqlParameter(parameter.key, parameter.value));
-                }
+                SqlCommand command = createSqlCommand(name, connection, parameters);
                 SqlDataReader dr = command.ExecuteReader();
                 List<T> result = new List<T>();
 
@@ -85,6 +81,27 @@ namespace PagoAgilFrba.Utils{
                 return list[0];
             }
             return default(T);
+        }
+
+        public void executeNonQuery(String name , List<Parameter> parameters = null){
+            if (parameters == null){
+                    parameters = new List<Parameter>(); 
+            }
+            using(SqlConnection connection = getConnection()){
+                connection.Open();
+                SqlCommand command = createSqlCommand(name, connection, parameters);
+                command.ExecuteNonQuery();
+            }
+
+        }
+
+        private SqlCommand createSqlCommand(String name, SqlConnection connection, List<Parameter> parameters){
+            SqlCommand command = new SqlCommand(schema + "." + name, connection);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            foreach (var parameter in parameters){
+                command.Parameters.Add(new SqlParameter(parameter.key, parameter.value));
+            }
+            return command;
         }
 
     }

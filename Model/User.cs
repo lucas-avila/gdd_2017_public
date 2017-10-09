@@ -10,6 +10,8 @@ namespace PagoAgilFrba.Model
 
         public String userName { get; set; }
         public String password { get; set; }
+        public Boolean active { get; set; }
+        public int userAttempts { get; set; }
 
     }
 }

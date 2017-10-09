@@ -39,9 +39,22 @@ namespace PagoAgilFrba
                     return;
                 }
 
+                if (!logged.active){
+                    MessageBox.Show("Usuario inactivo", "Error");
+                    return;
+                }
+
                 if (!logged.password.Equals(Crypto.encrypt(password))) {
                     MessageBox.Show("Contraseña incorrecta", "Error");
+                    logged.userAttempts++;
+                    parameters.Add(new Parameter("@login_attempts", logged.userAttempts));
+                    StoreManager.getInstance().executeNonQuery("sp_update_user_attempts", parameters);
                     return;
+                }
+
+                if (logged.userAttempts > 0){
+                    parameters.Add(new Parameter("@login_attempts", 0));
+                    StoreManager.getInstance().executeNonQuery("sp_update_user_attempts", parameters);
                 }
 
                 //TODO ver que se hace con la variable logged y a quien se la pasa

@@ -14,6 +14,8 @@ namespace PagoAgilFrba.Mappers
             User user = new User();
             user.password = (String)row["user_password"];
             user.userName = (String)row["user_username"];
+            user.userAttempts = (int)row["user_login_attempts"];
+            user.active = (Boolean)row["user_active"];
 
             return user;
         }
