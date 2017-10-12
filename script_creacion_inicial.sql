@@ -109,8 +109,7 @@ CREATE TABLE GDD_FORK.Bill (
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
 	bill_com_cuit nvarchar(50) NOT NULL,
-	bill_ref_id int NOT NULL,
-	bill_inv_nro numeric(18, 0) NOT NULL,
+	bill_inv_nro numeric(18, 0) NULL,
 	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
@@ -128,20 +127,6 @@ CREATE TABLE GDD_FORK.Bill_Refund (
 	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
 GO
 
-
-CREATE TABLE GDD_FORK.InvoiceRefund (
-	ref_id int identity NOT NULL,
-	ref_reason nvarchar(255) NOT NULL,
-	CONSTRAINT InvoiceRefund_PK PRIMARY KEY (ref_id))
-GO
-
-CREATE TABLE GDD_FORK.Invoice_Refund (
-	invoice_id numeric(18, 0) NOT NULL,
-	refund_id int NOT NULL,
-	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id),
-	FOREIGN KEY (invoice_id) REFERENCES GDD_FORK.Invoice(inv_nro),
-	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.InvoiceRefund(ref_id))
-GO
 
 CREATE TABLE GDD_FORK.Payment (
 	pay_number numeric(18, 0) NOT NULL,
@@ -164,6 +149,32 @@ CREATE TABLE GDD_FORK.Item (
 	it_quantity numeric(18, 0) NOT NULL,
 	CONSTRAINT Item_PK PRIMARY KEY (it_number, it_bill_number),
 	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
+GO
+
+--DATA MIGRATION
+
+INSERT INTO GDD_FORK.Client (cli_dni,cli_last_name,cli_name,cli_date_birth,cli_email,cli_address,cli_postal_code)
+SELECT DISTINCT([Cliente-Dni]),[Cliente-Apellido],[Cliente-Nombre],[Cliente-Fecha_Nac],[Cliente_Mail] 
+,[Cliente_Direccion],[Cliente_Codigo_Postal] from gd_esquema.Maestra
+GO
+
+INSERT INTO GDD_FORK.Entry (ent_description)
+SELECT distinct(Rubro_Descripcion) from gd_esquema.Maestra
+GO
+
+INSERT INTO GDD_FORK.Branch (branch_name,branch_address,branch_postal_code)
+SELECT distinct(Sucursal_Nombre),Sucursal_Dirección,Sucursal_Codigo_Postal FROM gd_esquema.Maestra
+WHERE Sucursal_Nombre IS NOT NULL
+GO
+
+INSERT INTO GDD_FORK.Payment_Method (paym_description) 
+SELECT distinct(FormaPagoDescripcion) FROM gd_esquema.Maestra 
+WHERE FormaPagoDescripcion IS NOT NULL
+GO
+
+INSERT INTO GDD_FORK.Company (com_cuit,com_ent_id,com_name,com_address)
+SELECT distinct(Empresa_Cuit),(SELECT ent_id from GDD_FORK.Entry where ent_description = Rubro_Descripcion),
+Empresa_Nombre,Empresa_Direccion FROM gd_esquema.Maestra
 GO
 
 --STORES PROCEDURES
