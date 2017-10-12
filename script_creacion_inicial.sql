@@ -187,3 +187,20 @@ AS
 		WHERE user_username=@username
 	END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_roles (@user_id varchar(150), @active bit)
+AS
+	BEGIN
+		SELECT r.role_active,r.role_name,r.role_id 
+		FROM GDD_FORK.Role r join GDD_FORK.Role_user ru on r.role_id = ru.role_id
+		WHERE ru.user_id = @user_id and r.role_active = @active
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_branchs(@user_id varchar(150))
+AS
+	BEGIN
+		SELECT branch_name, branch_address, branch_postal_code from Branch join Branch_user on branch_id = branch_name
+		where user_id = @user_id
+	END
+GO
