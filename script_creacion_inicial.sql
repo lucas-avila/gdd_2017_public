@@ -25,6 +25,8 @@ GO
 CREATE TABLE GDD_FORK.Users (
 	user_username varchar(150) NOT NULL, 
 	user_password varchar(64) NOT NULL, 
+	user_active bit NOT NULL,
+	user_login_attempts int NOT NULL,
 	CONSTRAINT User_PK PRIMARY KEY(user_username))
 GO
 
@@ -162,4 +164,43 @@ CREATE TABLE GDD_FORK.Item (
 	it_quantity numeric(18, 0) NOT NULL,
 	CONSTRAINT Item_PK PRIMARY KEY (it_number, it_bill_number),
 	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
+GO
+
+--STORES PROCEDURES
+
+CREATE PROCEDURE GDD_FORK.sp_get_user (@username varchar(150))
+AS
+	BEGIN
+		SELECT * FROM GDD_FORK.Users WHERE user_username=@username
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_update_user_attempts (@username varchar(150),@login_attempts int)
+AS
+	BEGIN
+		DECLARE @active bit = 1
+		IF @login_attempts >= 3
+		BEGIN
+			SET @active = 0
+		END
+		UPDATE GDD_FORK.Users set user_login_attempts = @login_attempts,user_active=@active 
+		WHERE user_username=@username
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_roles (@user_id varchar(150), @active bit)
+AS
+	BEGIN
+		SELECT r.role_active,r.role_name,r.role_id 
+		FROM GDD_FORK.Role r join GDD_FORK.Role_user ru on r.role_id = ru.role_id
+		WHERE ru.user_id = @user_id and r.role_active = @active
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_branchs(@user_id varchar(150))
+AS
+	BEGIN
+		SELECT branch_name, branch_address, branch_postal_code from Branch join Branch_user on branch_id = branch_name
+		where user_id = @user_id
+	END
 GO
