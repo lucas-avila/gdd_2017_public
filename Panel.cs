@@ -5,21 +5,20 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using PagoAgilFrba.Utils;
 
 namespace PagoAgilFrba
 {
-    public partial class LoginForm : Form
+    public partial class Panel : Form
     {
-        public LoginForm()
+        public Panel()
         {
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, EventArgs e){
-            new Panel().Show();
+        private void btnClient_Click(object sender, EventArgs e)
+        {
+            new Client.CRUDClientForm().Show();
         }
     }
 }
