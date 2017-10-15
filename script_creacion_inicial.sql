@@ -74,7 +74,6 @@ CREATE TABLE GDD_FORK.Invoice (
 	inv_amount numeric(18, 2) NOT NULL,
 	inv_total numeric(18, 2) NOT NULL,
 	inv_fee_percentage numeric NOT NULL,
-	inv_subtotal numeric(18, 2) NOT NULL,
 	inv_company_cuit nvarchar(50) NOT NULL, 
 	CONSTRAINT Invoice_PK PRIMARY KEY (inv_nro),
 	FOREIGN KEY (inv_company_cuit) REFERENCES GDD_FORK.Company(com_cuit))
@@ -134,7 +133,6 @@ CREATE TABLE GDD_FORK.Payment (
 	pay_branch_name nvarchar(50) NOT NULL,
 	pay_paym_id int NOT NULL,
 	pay_date datetime NOT NULL,
-	pay_item_number numeric(18, 0) NOT NULL,
 	pay_total numeric(18, 2) NOT NULL,
 	CONSTRAINT Payment_PK PRIMARY KEY (pay_number),
 	FOREIGN KEY (pay_bill_number) REFERENCES GDD_FORK.Bill(bill_number),
@@ -153,28 +151,67 @@ GO
 
 --DATA MIGRATION
 
-INSERT INTO GDD_FORK.Client (cli_dni,cli_last_name,cli_name,cli_date_birth,cli_email,cli_address,cli_postal_code)
-SELECT DISTINCT([Cliente-Dni]),[Cliente-Apellido],[Cliente-Nombre],[Cliente-Fecha_Nac],[Cliente_Mail] 
-,[Cliente_Direccion],[Cliente_Codigo_Postal] from gd_esquema.Maestra
+INSERT INTO GDD_FORK.Client (cli_dni, cli_last_name, cli_name, cli_date_birth, cli_email, cli_address, cli_postal_code)
+SELECT DISTINCT ([Cliente-Dni]), [Cliente-Apellido], [Cliente-Nombre], [Cliente-Fecha_Nac], [Cliente_Mail], [Cliente_Direccion], [Cliente_Codigo_Postal]
+FROM gd_esquema.Maestra
 GO
 
 INSERT INTO GDD_FORK.Entry (ent_description)
-SELECT distinct(Rubro_Descripcion) from gd_esquema.Maestra
+SELECT DISTINCT (Rubro_Descripcion)
+FROM gd_esquema.Maestra
 GO
 
-INSERT INTO GDD_FORK.Branch (branch_name,branch_address,branch_postal_code)
-SELECT distinct(Sucursal_Nombre),Sucursal_Dirección,Sucursal_Codigo_Postal FROM gd_esquema.Maestra
+INSERT INTO GDD_FORK.Branch (branch_name, branch_address, branch_postal_code)
+SELECT DISTINCT (Sucursal_Nombre), Sucursal_Dirección, Sucursal_Codigo_Postal
+FROM gd_esquema.Maestra
 WHERE Sucursal_Nombre IS NOT NULL
 GO
 
-INSERT INTO GDD_FORK.Payment_Method (paym_description) 
-SELECT distinct(FormaPagoDescripcion) FROM gd_esquema.Maestra 
+INSERT INTO GDD_FORK.Payment_Method (paym_description)
+SELECT DISTINCT (FormaPagoDescripcion)
+FROM gd_esquema.Maestra
 WHERE FormaPagoDescripcion IS NOT NULL
 GO
 
-INSERT INTO GDD_FORK.Company (com_cuit,com_ent_id,com_name,com_address)
-SELECT distinct(Empresa_Cuit),(SELECT ent_id from GDD_FORK.Entry where ent_description = Rubro_Descripcion),
-Empresa_Nombre,Empresa_Direccion FROM gd_esquema.Maestra
+INSERT INTO GDD_FORK.Company (com_cuit, com_ent_id, com_name, com_address)
+SELECT DISTINCT (REPLACE(Empresa_Cuit, '-', '')),
+		(SELECT ent_id
+		FROM GDD_FORK.Entry
+		WHERE ent_description = Rubro_Descripcion), Empresa_Nombre, Empresa_Direccion
+FROM gd_esquema.Maestra
+GO
+
+INSERT INTO GDD_FORK.Invoice (inv_nro,inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_cuit)
+SELECT DISTINCT(Rendicion_Nro),Rendicion_Fecha,ItemRendicion_Importe,Factura_Total,10,(REPLACE(Empresa_Cuit ,'-',''))
+FROM gd_esquema.Maestra 
+WHERE Rendicion_Nro is not null
+GO
+
+INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_dni,bill_com_cuit,bill_inv_nro,bill_date,bill_total,bill_expiration)
+SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(REPLACE(m.Empresa_Cuit ,'-','')),
+		(SELECT DISTINCT (m2.Rendicion_Nro)
+		FROM gd_esquema.Maestra m2
+		WHERE m2.Nro_Factura = m.Nro_Factura
+		AND m2.Rendicion_Nro IS NOT NULL)
+,m.Factura_Fecha,m.Factura_Total,m.Factura_Fecha_Vencimiento
+FROM gd_esquema.Maestra m
+GO
+
+INSERT INTO GDD_FORK.Item(it_amount,it_bill_number,it_quantity)
+SELECT distinct (m1.ItemFactura_Monto),Nro_Factura,ItemFactura_Cantidad
+FROM gd_esquema.Maestra m1
+WHERE m1.ItemFactura_Monto IS NOT NULL 
+order by Nro_Factura asc
+GO
+
+INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_number,pay_branch_name,pay_paym_id,pay_date,pay_total)
+SELECT DISTINCT (Pago_nro),Nro_Factura,Sucursal_Nombre,
+	(SELECT paym_id 
+	FROM GDD_FORK.Payment_Method 
+	WHERE paym_description = FormaPagoDescripcion)
+,Pago_Fecha,Total 
+FROM gd_esquema.Maestra
+WHERE Pago_nro IS NOT NULL
 GO
 
 --USERS
