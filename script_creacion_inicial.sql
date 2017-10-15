@@ -1,7 +1,7 @@
 ﻿CREATE schema GDD_FORK
 GO
 
-CREATE TABLE GDD_FORK.Funcionality (
+CREATE TABLE GDD_FORK.Functionality (
 	func_name varchar(100) NOT NULL, 
 	func_id int identity NOT NULL, 
 	CONSTRAINT Funcionality_PK PRIMARY KEY(func_id))
@@ -14,7 +14,7 @@ CREATE TABLE GDD_FORK.Role (
 	CONSTRAINT Role_PK PRIMARY KEY(role_id))
 GO
 
-CREATE TABLE GDD_FORK.Role_Funcionality (
+CREATE TABLE GDD_FORK.Role_Functionality (
 	role_id int NOT NULL, 
 	func_id int NOT NULL, 
 	CONSTRAINT Role_Funcionality_PK PRIMARY KEY(role_id,func_id),
@@ -188,7 +188,7 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_get_roles (@user_id varchar(150), @active bit)
+CREATE PROCEDURE GDD_FORK.sp_get_roles(@user_id varchar(150), @active bit)
 AS
 	BEGIN
 		SELECT r.role_active,r.role_name,r.role_id 
@@ -197,10 +197,43 @@ AS
 	END
 GO
 
+CREATE PROCEDURE GDD_FORK.sp_get_all_roles(@role_name varchar(100))
+AS
+	BEGIN
+		SELECT *
+		FROM GDD_FORK.Role;
+	END
+GO
+
 CREATE PROCEDURE GDD_FORK.sp_get_branchs(@user_id varchar(150))
 AS
 	BEGIN
 		SELECT branch_name, branch_address, branch_postal_code from Branch join Branch_user on branch_id = branch_name
 		where user_id = @user_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_add_role(@role_name varchar(100), @role_active bit)
+AS	
+	BEGIN
+		INSERT INTO GDD_FORK.Role (role_name, role_active) Values(@role_name, @role_active)
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_link_functionality_role(@role_name varchar(100), @func_name varchar(100))
+AS	
+	BEGIN
+		DECLARE @id
+		DECLARE @func_id
+		SELECT func_id = @func_id FROM GDD.Funcionality WHERE func_name = @func_name
+		SELECT @id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name)
+		INSERT INTO GDD_FORK.Role_Funcionality VALUES (@id, @func_id)
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_functionalities
+AS
+	BEGIN
+		SELECT func_name FROM GDD_FORK.Funcionality
 	END
 GO
