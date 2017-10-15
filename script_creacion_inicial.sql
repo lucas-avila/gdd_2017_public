@@ -220,16 +220,32 @@ INSERT INTO GDD_FORK.Users (user_active,user_login_attempts,user_username,user_p
 VALUES (1,0,'admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7')
 GO
 
+INSERT INTO GDD_FORK.Users (user_active,user_login_attempts,user_username,user_password)
+VALUES (1,0,'pablo','26079e41910bcde04be636fbeecc9045379882b5ad3fe7f70b762436c6d98055')
+GO
+
 INSERT INTO GDD_FORK.Role (role_name,role_active)
 VALUES ('Administrador',1)
+GO
+
+INSERT INTO GDD_FORK.Role (role_name,role_active)
+VALUES ('Cobrador',1)
 GO
 
 INSERT INTO GDD_FORK.Role_user (user_id,role_id)
 VALUES ('admin', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Administrador') )
 GO
 
+INSERT INTO GDD_FORK.Role_user (user_id,role_id)
+VALUES ('pablo', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Cobrador') )
+GO
+
 INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
 VALUES ((SELECT branch_name FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'admin')
+GO
+
+INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
+VALUES ((SELECT branch_name FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'pablo')
 GO
 
 
