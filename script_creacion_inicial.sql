@@ -1,7 +1,7 @@
 ﻿CREATE schema GDD_FORK
 GO
 
-CREATE TABLE GDD_FORK.Functionality (
+CREATE TABLE GDD_FORK.Funcionality (
 	func_name varchar(100) NOT NULL, 
 	func_id int identity NOT NULL, 
 	CONSTRAINT Funcionality_PK PRIMARY KEY(func_id))
@@ -14,7 +14,7 @@ CREATE TABLE GDD_FORK.Role (
 	CONSTRAINT Role_PK PRIMARY KEY(role_id))
 GO
 
-CREATE TABLE GDD_FORK.Role_Functionality (
+CREATE TABLE GDD_FORK.Role_Funcionality (
 	role_id int NOT NULL, 
 	func_id int NOT NULL, 
 	CONSTRAINT Role_Funcionality_PK PRIMARY KEY(role_id,func_id),
