@@ -128,21 +128,6 @@ CREATE TABLE GDD_FORK.Bill_Refund (
 	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
 GO
 
-
-CREATE TABLE GDD_FORK.InvoiceRefund (
-	ref_id int identity NOT NULL,
-	ref_reason nvarchar(255) NOT NULL,
-	CONSTRAINT InvoiceRefund_PK PRIMARY KEY (ref_id))
-GO
-
-CREATE TABLE GDD_FORK.Invoice_Refund (
-	invoice_id numeric(18, 0) NOT NULL,
-	refund_id int NOT NULL,
-	CONSTRAINT Invoice_Refund_PK PRIMARY KEY (invoice_id, refund_id),
-	FOREIGN KEY (invoice_id) REFERENCES GDD_FORK.Invoice(inv_nro),
-	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.InvoiceRefund(ref_id))
-GO
-
 CREATE TABLE GDD_FORK.Payment (
 	pay_number numeric(18, 0) NOT NULL,
 	pay_bill_number numeric(18, 0) NOT NULL,
