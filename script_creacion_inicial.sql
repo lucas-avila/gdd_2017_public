@@ -188,6 +188,15 @@ AS
 	END
 GO
 
+CREATE PROCEDURE GDD_FORK.sp_get_role(@role_name varchar(100))
+AS
+	BEGIN
+		SELECT *
+		FROM GDD_FORK.Role
+		WHERE role_name = @role_name;
+	END
+GO
+
 CREATE PROCEDURE GDD_FORK.sp_get_roles(@user_id varchar(150), @active bit)
 AS
 	BEGIN
@@ -197,11 +206,45 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_get_all_roles(@role_name varchar(100))
+CREATE PROCEDURE GDD_FORK.sp_get_all_roles
 AS
 	BEGIN
 		SELECT *
 		FROM GDD_FORK.Role;
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_add_role(@role_name varchar(100), @role_active bit)
+AS	
+	BEGIN
+		INSERT INTO GDD_FORK.Role (role_name, role_active) Values(@role_name, @role_active)
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_update_role(@role_id int, @role_name varchar(100), @role_active bit)
+AS
+	BEGIN
+		UPDATE GDD_FORK.Role
+		SET role_name = @role_name, role_active = @role_active
+		WHERE role_id = @role_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_remove_role(@role_name varchar(100))
+AS
+	BEGIN
+		DECLARE @role_id int
+		SELECT @role_id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name
+		
+		DELETE FROM GDD_FORK.Role_Funcionality
+		WHERE role_id = @role_id
+
+		DELETE FROM GDD_FORK.Role_user
+		WHERE role_id = @role_id
+
+		DELETE FROM GDD_FORK.Role
+		WHERE role_name = @role_name
+
 	END
 GO
 
@@ -210,13 +253,6 @@ AS
 	BEGIN
 		SELECT branch_name, branch_address, branch_postal_code from Branch join Branch_user on branch_id = branch_name
 		where user_id = @user_id
-	END
-GO
-
-CREATE PROCEDURE GDD_FORK.sp_add_role(@role_name varchar(100), @role_active bit)
-AS	
-	BEGIN
-		INSERT INTO GDD_FORK.Role (role_name, role_active) Values(@role_name, @role_active)
 	END
 GO
 
@@ -234,6 +270,44 @@ GO
 CREATE PROCEDURE GDD_FORK.sp_get_functionalities
 AS
 	BEGIN
-		SELECT func_name FROM GDD_FORK.Funcionality
+		SELECT * 
+		FROM GDD_FORK.Funcionality
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_functionality(@func_name varchar(100))
+AS
+	BEGIN 
+		SELECT * 
+		FROM GDD_FORK.Funcionality
+		WHERE func_name = @func_name
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_role_functionalities(@role_id int)
+AS
+	BEGIN
+		SELECT f.func_name, f.func_id 
+		FROM Funcionality f 
+		JOIN Role_Funcionality rf 
+		ON rf.func_id = f.func_id
+		WHERE rf.role_id = @role_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_remove_role_functionality(@role_id int, @func_id int)
+AS
+	BEGIN
+		DELETE FROM GDD_FORK.Role_Funcionality
+		WHERE role_id = @role_id
+		AND func_id = @func_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_remove_role_from_users(@role_id int)
+AS
+	BEGIN
+		DELETE FROM GDD_FORK.Role_user
+		WHERE role_id = @role_id
 	END
 GO

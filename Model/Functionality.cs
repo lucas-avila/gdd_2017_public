@@ -9,5 +9,6 @@ namespace PagoAgilFrba.Model
     public class Functionality
     {
         public String name { get; set; }
+        public int id { get; set; }
     }
 }

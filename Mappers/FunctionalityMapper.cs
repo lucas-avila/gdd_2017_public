@@ -10,10 +10,10 @@ namespace PagoAgilFrba.Mappers
 {
     class FunctionalityMapper : StoreResultMapper<Functionality>
     {
-
         public Functionality getMapped(Dictionary<string, object> row)
         {
             Functionality func = new Functionality();
+            func.id = (int)row["func_id"];
             func.name = (String)row["func_name"];
             return func;
         }

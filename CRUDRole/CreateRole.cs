@@ -20,6 +20,7 @@ namespace PagoAgilFrba.CRUDRole
         private Label label2;
         private Button btnCreate;
         private Label label3;
+        private Button btnCancel;
         private Label label1;
 
         public CreateRole()
@@ -44,29 +45,28 @@ namespace PagoAgilFrba.CRUDRole
             var functionalities = Funcionalidades.SelectedItems;
             //We check the a name and the selected functionality.
             if (String.IsNullOrEmpty(roleName) || functionalities.Count == 0){
-                MessageBox.Show("Debe ingresar un nombre de usuario y elegir al menos una funcionalidad", "Error");
+                MessageBox.Show("Debe ingresar un nombre para el rol y elegir al menos una funcionalidad", "Error");
                 return;
             }
 
             //Check that the role_name is not used...
-            List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter("@role_name", roleName));
-
-            if (role_already_exists(parameters, roleName))
+            if (role_already_exists(roleName))
             {
                 MessageBox.Show("El nombre del rol ingresado ya se encuentra en uso", "Error");
                 return;
             }
-
             //Update the tables with the new information.
-            update_tables(roleName, parameters);
+            update_tables(roleName);
             MessageBox.Show("Se agrego el rol exitosamente.", "Exito");
             this.Hide();
+            new CRUDRoleForm().Show();
         }
 
-        private void update_tables(String roleName, List<Parameter> parameters)
+        private void update_tables(String roleName)
         {
             // First we add the new role to Role table.
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@role_name", roleName));
             parameters.Add(new Parameter("@role_active", 1));
             StoreManager.getInstance().executeNonQuery("sp_add_role", parameters);
 
@@ -80,9 +80,9 @@ namespace PagoAgilFrba.CRUDRole
             }
         }
 
-        private Boolean role_already_exists(List<Parameter> parameters, String roleName)
+        private Boolean role_already_exists(String roleName)
         {
-            List<Role> roles = StoreManager.getInstance().executeReadStore<Role>("sp_get_all_roles", new RoleMapper(), parameters);
+            List<Role> roles = StoreManager.getInstance().executeReadStore<Role>("sp_get_all_roles", new RoleMapper(), null);
             return roles.FindIndex(element => element.name == roleName) >= 0;
         }
 
@@ -99,6 +99,7 @@ namespace PagoAgilFrba.CRUDRole
             this.label2 = new System.Windows.Forms.Label();
             this.btnCreate = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -162,10 +163,21 @@ namespace PagoAgilFrba.CRUDRole
             this.label3.Text = "(Use ALT+CLICK para selección múltiple)";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(15, 237);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 17;
+            this.btnCancel.Text = "Cancelar";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // CreateRole
             // 
             this.AccessibleName = "";
             this.ClientSize = new System.Drawing.Size(284, 272);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.label2);
@@ -177,6 +189,7 @@ namespace PagoAgilFrba.CRUDRole
             this.Load += new System.EventHandler(this.CreateRole_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -207,6 +220,12 @@ namespace PagoAgilFrba.CRUDRole
         private void label3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            new CRUDRoleForm().Show();
         }
     }
 }
