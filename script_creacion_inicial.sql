@@ -166,6 +166,32 @@ CREATE TABLE GDD_FORK.Item (
 	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
 GO
 
+--FUNCTIONALITIES
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM ROL')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM CLIENTE')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM EMPRESA')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM SUCURSAL')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM FACTURAS')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('REGISTRO PAGO')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('RENDICION FACTURAS')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('LISTADO ESTADISTICO')
+GO
+
 --STORES PROCEDURES
 
 CREATE PROCEDURE GDD_FORK.sp_get_user (@username varchar(150))
