@@ -230,20 +230,18 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_remove_role(@role_name varchar(100))
+CREATE PROCEDURE GDD_FORK.sp_disable_role(@role_name varchar(100))
 AS
 	BEGIN
 		DECLARE @role_id int
 		SELECT @role_id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name
 		
-		DELETE FROM GDD_FORK.Role_Funcionality
+		UPDATE GDD_FORK.Role
+		SET role_active = 0
 		WHERE role_id = @role_id
 
 		DELETE FROM GDD_FORK.Role_user
 		WHERE role_id = @role_id
-
-		DELETE FROM GDD_FORK.Role
-		WHERE role_name = @role_name
 
 	END
 GO

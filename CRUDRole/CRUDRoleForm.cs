@@ -70,19 +70,27 @@ namespace PagoAgilFrba.CRUDRole
 
             if (String.IsNullOrEmpty(role))
             {
-                MessageBox.Show("Debe seleccionar un rol para eliminar", "Error");
+                MessageBox.Show("Debe seleccionar un rol para inhabilitar", "Error");
                 return;
             }
 
-            deleteRole(role);
+            disableRole(role);
         }
 
-        private void deleteRole(String role)
+        private void disableRole(String role_name)
+        {
+            Role role = getRole(role_name);
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@role_name", role_name));
+            StoreManager.getInstance().executeNonQuery("sp_disable_role", parameters);
+            MessageBox.Show("Se inhabilitó el rol correctamente", "Éxito");
+        }
+
+        private Role getRole(String role_name)
         {
             List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter("@role_name", role));
-            StoreManager.getInstance().executeNonQuery("sp_remove_role", parameters);
-            setRolesBox();
+            parameters.Add(new Parameter("@role_name", role_name));
+            return StoreManager.getInstance().executeReadStore<Role>("sp_get_role", new RoleMapper(), parameters).First();
         }
     }
 }
