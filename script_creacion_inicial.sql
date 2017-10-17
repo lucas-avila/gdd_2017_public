@@ -257,9 +257,9 @@ GO
 CREATE PROCEDURE GDD_FORK.sp_link_functionality_role(@role_name varchar(100), @func_name varchar(100))
 AS	
 	BEGIN
-		DECLARE @id
-		DECLARE @func_id
-		SELECT func_id = @func_id FROM GDD.Funcionality WHERE func_name = @func_name
+		DECLARE @id int
+		DECLARE @func_id int
+		SELECT func_id = @func_id FROM GDD_FORK.Funcionality WHERE func_name = @func_name
 		SELECT @id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name
 		INSERT INTO GDD_FORK.Role_Funcionality VALUES (@id, @func_id)
 	END
