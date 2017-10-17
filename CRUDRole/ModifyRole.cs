@@ -83,6 +83,12 @@ namespace PagoAgilFrba.CRUDRole
                 return;
             }
 
+            if(funcBox.Items.Count == 1)
+            {
+                MessageBox.Show("El rol no puede quedar sin funcionalidades.", "Error");
+                return;
+            }
+
             deleteFunctionality(functionality);
         } 
 
