@@ -262,7 +262,7 @@ AS
 		DECLARE @id
 		DECLARE @func_id
 		SELECT func_id = @func_id FROM GDD.Funcionality WHERE func_name = @func_name
-		SELECT @id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name)
+		SELECT @id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name
 		INSERT INTO GDD_FORK.Role_Funcionality VALUES (@id, @func_id)
 	END
 GO
