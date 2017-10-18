@@ -49,6 +49,12 @@ namespace PagoAgilFrba.CRUDRole
                 return;
             }
 
+            if(roleName.Length > 100)
+            {
+                MessageBox.Show("El nombre puede tener como maximo 100 caracteres.", "Error");
+                return;
+            }
+
             //Check that the role_name is not used...
             if (role_already_exists(roleName))
             {
