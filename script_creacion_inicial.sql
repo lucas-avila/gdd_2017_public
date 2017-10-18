@@ -74,7 +74,6 @@ CREATE TABLE GDD_FORK.Invoice (
 	inv_amount numeric(18, 2) NOT NULL,
 	inv_total numeric(18, 2) NOT NULL,
 	inv_fee_percentage numeric NOT NULL,
-	inv_subtotal numeric(18, 2) NOT NULL,
 	inv_company_cuit nvarchar(50) NOT NULL, 
 	CONSTRAINT Invoice_PK PRIMARY KEY (inv_nro),
 	FOREIGN KEY (inv_company_cuit) REFERENCES GDD_FORK.Company(com_cuit))
@@ -109,8 +108,7 @@ CREATE TABLE GDD_FORK.Bill (
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
 	bill_com_cuit nvarchar(50) NOT NULL,
-	bill_ref_id int NOT NULL,
-	bill_inv_nro numeric(18, 0) NOT NULL,
+	bill_inv_nro numeric(18, 0) NULL,
 	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
@@ -128,13 +126,13 @@ CREATE TABLE GDD_FORK.Bill_Refund (
 	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
 GO
 
+
 CREATE TABLE GDD_FORK.Payment (
 	pay_number numeric(18, 0) NOT NULL,
 	pay_bill_number numeric(18, 0) NOT NULL,
 	pay_branch_name nvarchar(50) NOT NULL,
 	pay_paym_id int NOT NULL,
 	pay_date datetime NOT NULL,
-	pay_item_number numeric(18, 0) NOT NULL,
 	pay_total numeric(18, 2) NOT NULL,
 	CONSTRAINT Payment_PK PRIMARY KEY (pay_number),
 	FOREIGN KEY (pay_bill_number) REFERENCES GDD_FORK.Bill(bill_number),
@@ -150,6 +148,7 @@ CREATE TABLE GDD_FORK.Item (
 	CONSTRAINT Item_PK PRIMARY KEY (it_number, it_bill_number),
 	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
 GO
+
 
 --FUNCTIONALITIES
 
@@ -176,6 +175,107 @@ GO
 
 INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('LISTADO ESTADISTICO')
 GO
+
+
+--DATA MIGRATION
+
+INSERT INTO GDD_FORK.Client (cli_dni, cli_last_name, cli_name, cli_date_birth, cli_email, cli_address, cli_postal_code)
+SELECT DISTINCT ([Cliente-Dni]), [Cliente-Apellido], [Cliente-Nombre], [Cliente-Fecha_Nac], [Cliente_Mail], [Cliente_Direccion], [Cliente_Codigo_Postal]
+FROM gd_esquema.Maestra
+GO
+
+INSERT INTO GDD_FORK.Entry (ent_description)
+SELECT DISTINCT (Rubro_Descripcion)
+FROM gd_esquema.Maestra
+GO
+
+INSERT INTO GDD_FORK.Branch (branch_name, branch_address, branch_postal_code)
+SELECT DISTINCT (Sucursal_Nombre), Sucursal_Dirección, Sucursal_Codigo_Postal
+FROM gd_esquema.Maestra
+WHERE Sucursal_Nombre IS NOT NULL
+GO
+
+INSERT INTO GDD_FORK.Payment_Method (paym_description)
+SELECT DISTINCT (FormaPagoDescripcion)
+FROM gd_esquema.Maestra
+WHERE FormaPagoDescripcion IS NOT NULL
+GO
+
+INSERT INTO GDD_FORK.Company (com_cuit, com_ent_id, com_name, com_address)
+SELECT DISTINCT (REPLACE(Empresa_Cuit, '-', '')),
+		(SELECT ent_id
+		FROM GDD_FORK.Entry
+		WHERE ent_description = Rubro_Descripcion), Empresa_Nombre, Empresa_Direccion
+FROM gd_esquema.Maestra
+GO
+
+INSERT INTO GDD_FORK.Invoice (inv_nro,inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_cuit)
+SELECT DISTINCT(Rendicion_Nro),Rendicion_Fecha,ItemRendicion_Importe,Factura_Total,10,(REPLACE(Empresa_Cuit ,'-',''))
+FROM gd_esquema.Maestra 
+WHERE Rendicion_Nro is not null
+GO
+
+INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_dni,bill_com_cuit,bill_inv_nro,bill_date,bill_total,bill_expiration)
+SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(REPLACE(m.Empresa_Cuit ,'-','')),
+		(SELECT DISTINCT (m2.Rendicion_Nro)
+		FROM gd_esquema.Maestra m2
+		WHERE m2.Nro_Factura = m.Nro_Factura
+		AND m2.Rendicion_Nro IS NOT NULL)
+,m.Factura_Fecha,m.Factura_Total,m.Factura_Fecha_Vencimiento
+FROM gd_esquema.Maestra m
+GO
+
+INSERT INTO GDD_FORK.Item(it_amount,it_bill_number,it_quantity)
+SELECT distinct (m1.ItemFactura_Monto),Nro_Factura,ItemFactura_Cantidad
+FROM gd_esquema.Maestra m1
+WHERE m1.ItemFactura_Monto IS NOT NULL 
+order by Nro_Factura asc
+GO
+
+INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_number,pay_branch_name,pay_paym_id,pay_date,pay_total)
+SELECT DISTINCT (Pago_nro),Nro_Factura,Sucursal_Nombre,
+	(SELECT paym_id 
+	FROM GDD_FORK.Payment_Method 
+	WHERE paym_description = FormaPagoDescripcion)
+,Pago_Fecha,Total 
+FROM gd_esquema.Maestra
+WHERE Pago_nro IS NOT NULL
+GO
+
+--USERS
+
+INSERT INTO GDD_FORK.Users (user_active,user_login_attempts,user_username,user_password)
+VALUES (1,0,'admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7')
+GO
+
+INSERT INTO GDD_FORK.Users (user_active,user_login_attempts,user_username,user_password)
+VALUES (1,0,'pablo','26079e41910bcde04be636fbeecc9045379882b5ad3fe7f70b762436c6d98055')
+GO
+
+INSERT INTO GDD_FORK.Role (role_name,role_active)
+VALUES ('Administrador',1)
+GO
+
+INSERT INTO GDD_FORK.Role (role_name,role_active)
+VALUES ('Cobrador',1)
+GO
+
+INSERT INTO GDD_FORK.Role_user (user_id,role_id)
+VALUES ('admin', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Administrador') )
+GO
+
+INSERT INTO GDD_FORK.Role_user (user_id,role_id)
+VALUES ('pablo', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Cobrador') )
+GO
+
+INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
+VALUES ((SELECT branch_name FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'admin')
+GO
+
+INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
+VALUES ((SELECT branch_name FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'pablo')
+GO
+
 
 --STORES PROCEDURES
 
@@ -241,20 +341,18 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_remove_role(@role_name varchar(100))
+CREATE PROCEDURE GDD_FORK.sp_disable_role(@role_name varchar(100))
 AS
 	BEGIN
 		DECLARE @role_id int
 		SELECT @role_id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name
 		
-		DELETE FROM GDD_FORK.Role_Funcionality
+		UPDATE GDD_FORK.Role
+		SET role_active = 0
 		WHERE role_id = @role_id
 
 		DELETE FROM GDD_FORK.Role_user
 		WHERE role_id = @role_id
-
-		DELETE FROM GDD_FORK.Role
-		WHERE role_name = @role_name
 
 	END
 GO
@@ -270,9 +368,9 @@ GO
 CREATE PROCEDURE GDD_FORK.sp_link_functionality_role(@role_name varchar(100), @func_name varchar(100))
 AS	
 	BEGIN
-		DECLARE @id
-		DECLARE @func_id
-		SELECT func_id = @func_id FROM GDD.Funcionality WHERE func_name = @func_name
+		DECLARE @id int
+		DECLARE @func_id int
+		SELECT @func_id = func_id FROM GDD_FORK.Funcionality WHERE func_name = @func_name
 		SELECT @id = role_id FROM GDD_FORK.Role WHERE role_name = @role_name
 		INSERT INTO GDD_FORK.Role_Funcionality VALUES (@id, @func_id)
 	END

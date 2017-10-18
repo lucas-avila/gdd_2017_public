@@ -83,6 +83,12 @@ namespace PagoAgilFrba.CRUDRole
                 return;
             }
 
+            if(funcBox.Items.Count == 1)
+            {
+                MessageBox.Show("El rol no puede quedar sin funcionalidades.", "Error");
+                return;
+            }
+
             deleteFunctionality(functionality);
         } 
 
@@ -115,7 +121,13 @@ namespace PagoAgilFrba.CRUDRole
                 return;
             }
 
-            if(no_changes(new_role_name))
+            if (new_role_name.Length > 100)
+            {
+                MessageBox.Show("El nombre puede tener como maximo 100 caracteres.", "Error");
+                return;
+            }
+
+            if (no_changes(new_role_name))
             {
                 MessageBox.Show("No se detectaron cambios en el nombre ni el estado", "Advertencia");
                 this.Hide();
