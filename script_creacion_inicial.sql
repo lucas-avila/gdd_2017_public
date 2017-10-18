@@ -256,6 +256,10 @@ INSERT INTO GDD_FORK.Role (role_name,role_active)
 VALUES ('Administrador',1)
 GO
 
+INSERT INTO GDD_FORK.Role_Funcionality (role_id,func_id) 
+	SELECT (SELECT role_id FROM GDD_FORK.Role where role_name = 'Administrador'), func_id FROM GDD_FORK.Funcionality
+GO
+
 INSERT INTO GDD_FORK.Role (role_name,role_active)
 VALUES ('Cobrador',1)
 GO
