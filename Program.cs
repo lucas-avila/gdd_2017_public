@@ -17,7 +17,7 @@ namespace PagoAgilFrba
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CRUDRoleForm());
+            Application.Run(new LoginForm());
         }
     }
 }
