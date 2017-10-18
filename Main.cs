@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PagoAgilFrba.CRUDRole;
 
 namespace PagoAgilFrba
 {
@@ -27,7 +28,10 @@ namespace PagoAgilFrba
         private void loadFuncionalities(){
             List<Functionality> funcionalities = searchFuncionalities();
 
+            Dictionary<String, EventHandler> functions = getFunctions();
+
             int i=1;
+            int cantVisible = 0;
             foreach(Functionality function in funcionalities){
                 String btnId = "button"+i;
 
@@ -36,10 +40,60 @@ namespace PagoAgilFrba
                 if (control != null && control.Length > 0) { 
                     control[0].Visible = true;
                     control[0].Text = function.name;
+                    control[0].Click += functions[function.name];
+                    cantVisible++;
                 }
 
                 i++;
             }
+                this.Height = cantVisible * button1.Height + 100;
+        }
+
+        private Dictionary<String, EventHandler> getFunctions(){
+            Dictionary<String, EventHandler> result = new Dictionary<String, EventHandler>();
+
+            result.Add("ABM ROL",onClickABMRole);
+            result.Add("ABM CLIENTE",onClickABMCliente);
+            result.Add("ABM EMPRESA",onClickABMEmpresa);
+            result.Add("ABM SUCURSAL",onClickABMSucursal);
+            result.Add("ABM FACTURAS",onClickABMFacturas);
+            result.Add("REGISTRO PAGO",onClickRegistroPago);
+            result.Add("RENDICION FACTURAS",onClickRendicionFacturas);
+            result.Add("LISTADO ESTADISTICO", onClickListadoEstadistico);
+
+            return result;
+        }
+
+        private void onClickListadoEstadistico(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickRendicionFacturas(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickRegistroPago(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickABMFacturas(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickABMSucursal(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickABMEmpresa(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickABMCliente(object sender, EventArgs e){
+            MessageBox.Show("TODO");
+        }
+
+        private void onClickABMRole(object sender, EventArgs e){
+            new CRUDRoleForm().Show();
         }
 
         private List<Functionality> searchFuncionalities(){

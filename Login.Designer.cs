@@ -41,7 +41,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(193, 20);
-            this.txtPassword.TabIndex = 0;
+            this.txtPassword.TabIndex = 1;
             // 
             // label1
             // 
@@ -66,14 +66,14 @@
             this.txtUser.Location = new System.Drawing.Point(108, 42);
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(193, 20);
-            this.txtUser.TabIndex = 3;
+            this.txtUser.TabIndex = 0;
             // 
             // S
             // 
             this.S.Location = new System.Drawing.Point(252, 111);
             this.S.Name = "S";
             this.S.Size = new System.Drawing.Size(75, 23);
-            this.S.TabIndex = 4;
+            this.S.TabIndex = 2;
             this.S.Text = "Aceptar";
             this.S.UseVisualStyleBackColor = true;
             this.S.Click += new System.EventHandler(this.btnLogin_Click);
