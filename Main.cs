@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.CRUDRole;
+using PagoAgilFrba.CRUDBranch;
 
 namespace PagoAgilFrba
 {
@@ -81,7 +82,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMSucursal(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new CRUDBranchForm().Show();
         }
 
         private void onClickABMEmpresa(object sender, EventArgs e){

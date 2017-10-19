@@ -11,5 +11,6 @@ namespace PagoAgilFrba.Model
         public String name { get; set; }
         public String address { get; set; }
         public Decimal postalCode { get; set; }
+        public Boolean active { get; set; }
     }
 }

@@ -41,7 +41,8 @@ GO
 CREATE TABLE GDD_FORK.Branch(
 	branch_name nvarchar(50) NOT NULL, 
 	branch_address nvarchar(50) NOT NULL, 
-	branch_postal_code numeric(18,0) NOT NULL, 
+	branch_postal_code numeric(18,0) NOT NULL,
+	branch_active bit NOT NULL,
 	CONSTRAINT Branch_PK PRIMARY KEY(branch_name) )
 GO
 
@@ -189,8 +190,8 @@ SELECT DISTINCT (Rubro_Descripcion)
 FROM gd_esquema.Maestra
 GO
 
-INSERT INTO GDD_FORK.Branch (branch_name, branch_address, branch_postal_code)
-SELECT DISTINCT (Sucursal_Nombre), Sucursal_Dirección, Sucursal_Codigo_Postal
+INSERT INTO GDD_FORK.Branch (branch_name, branch_address, branch_postal_code,branch_active)
+SELECT DISTINCT (Sucursal_Nombre), Sucursal_Dirección, Sucursal_Codigo_Postal,1
 FROM gd_esquema.Maestra
 WHERE Sucursal_Nombre IS NOT NULL
 GO
@@ -364,8 +365,8 @@ GO
 CREATE PROCEDURE GDD_FORK.sp_get_branchs(@user_id varchar(150))
 AS
 	BEGIN
-		SELECT branch_name, branch_address, branch_postal_code from Branch join Branch_user on branch_id = branch_name
-		where user_id = @user_id
+		SELECT branch_name, branch_address, branch_postal_code, branch_active from Branch join Branch_user on branch_id = branch_name
+		where user_id = @user_id AND branch_active = 1
 	END
 GO
 
@@ -422,5 +423,15 @@ AS
 	BEGIN
 		DELETE FROM GDD_FORK.Role_user
 		WHERE role_id = @role_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_branchs(@name nvarchar(50) = NULL,@address nvarchar(50) = NULL,@postal_code numeric(18,0) = NULL)
+AS
+	BEGIN
+		SELECT branch_name, branch_address, branch_postal_code,branch_active FROM Branch
+		WHERE ((@name IS NULL) OR (branch_name like '%'+@name+'%'))
+		AND ((@address IS NULL) OR (branch_address like '%'+@address+'%'))
+		AND ((@postal_code IS NULL) OR (branch_postal_code like concat('%',@postal_code,'%')) )
 	END
 GO

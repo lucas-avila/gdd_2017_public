@@ -15,6 +15,7 @@ namespace PagoAgilFrba.Mappers
             branch.address = (String) row["branch_address"];
             branch.name = (String) row["branch_name"];
             branch.postalCode = (Decimal)row["branch_postal_code"];
+            branch.active = (Boolean)row["branch_active"];
             return branch;
         }
     }
