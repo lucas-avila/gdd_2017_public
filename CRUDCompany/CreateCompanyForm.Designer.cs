@@ -1,6 +1,6 @@
-﻿namespace PagoAgilFrba.AbmEmpresa
+﻿namespace PagoAgilFrba.CRUDCompany
 {
-    partial class Form1
+    partial class CreateCompanyForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // CreateCompanyForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "CreateCompanyForm";
+            this.Text = "Crear";
+            this.ResumeLayout(false);
+
         }
 
         #endregion

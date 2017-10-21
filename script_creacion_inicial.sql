@@ -392,3 +392,72 @@ AS
 		WHERE role_id = @role_id
 	END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_create_client(@cli_dni numeric(18, 0),
+	@cli_name nvarchar(255),
+	@cli_last_name nvarchar(255),
+	@cli_date_birth datetime,
+	@cli_email nvarchar(255),
+	@cli_address nvarchar(255),
+	@cli_postal_code nvarchar(255))
+AS
+	BEGIN
+		INSERT INTO Client (cli_dni,
+							cli_name,
+							cli_last_name,
+							cli_date_birth,
+							cli_email,
+							cli_address,
+							cli_postal_code)
+				VALUES (@cli_dni,
+						@cli_name,
+						@cli_last_name,
+						@cli_date_birth,
+						@cli_email,
+						@cli_address,
+						@cli_postal_code);
+
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_update_client(@cli_id int,
+	@cli_dni numeric(18, 0),
+	@cli_name nvarchar(255),
+	@cli_last_name nvarchar(255),
+	@cli_date_birth datetime,
+	@cli_email nvarchar(255),
+	@cli_address nvarchar(255),
+	@cli_postal_code nvarchar(255))
+AS
+	BEGIN
+		UPDATE Client
+				SET cli_dni = @cli_dni,
+					cli_name = @cli_name,
+					cli_last_name = @cli_last_name,
+					cli_date_birth = @cli_date_birth,
+					cli_email = @cli_email,
+					cli_address = @cli_address,
+					cli_postal_code = @cli_postal_code)
+				WHERE cli_id = @cli_id;
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_delete_client(@cli_id int)
+AS
+	BEGIN
+		DELETE FROM Client
+		WHERE cli_id = @cli_id;
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_select_client(@cli_dni numeric(18,0),
+				@cli_name nvarchar(255),
+				@cli_last_name nvarchar(255))
+AS
+	BEGIN
+		SELECT FROM Client
+		WHERE ((@cli_dni is null) or (cli_dni = @cli_dni))
+		and ((@cli_name = '') or (cli_name = @cli_name))
+		and ((@cli_last_name = '') or (cli_last_name = @cli_last_name));
+	END
+GO
