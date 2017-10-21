@@ -1,6 +1,7 @@
 ﻿CREATE schema GDD_FORK
 GO
 
+
 CREATE TABLE GDD_FORK.Funcionality (
 	func_name varchar(100) NOT NULL, 
 	func_id int identity NOT NULL, 
@@ -39,18 +40,20 @@ CREATE TABLE GDD_FORK.Role_user (
 GO
 
 CREATE TABLE GDD_FORK.Branch(
-	branch_name nvarchar(50) NOT NULL, 
-	branch_address nvarchar(50) NOT NULL, 
+	branch_id int identity NOT NULL,
+	branch_name nvarchar(50) NOT NULL,
+	branch_address nvarchar(50) NOT NULL,
 	branch_postal_code numeric(18,0) NOT NULL,
 	branch_active bit NOT NULL,
-	CONSTRAINT Branch_PK PRIMARY KEY(branch_name) )
+	CONSTRAINT Branch_UK_POSTAL_CODE UNIQUE (branch_postal_code),
+	CONSTRAINT Branch_PK PRIMARY KEY(branch_id) )
 GO
 
 CREATE TABLE GDD_FORK.Branch_user (
-	branch_id nvarchar(50) NOT NULL, 
+	branch_id int NOT NULL, 
 	user_id varchar(150) NOT NULL, 
 	CONSTRAINT branch_user_pk PRIMARY KEY (branch_id, user_id), 
-	FOREIGN KEY (branch_id) REFERENCES GDD_FORK.Branch(branch_name),
+	FOREIGN KEY (branch_id) REFERENCES GDD_FORK.Branch(branch_id),
 	FOREIGN KEY (user_id) REFERENCES GDD_FORK.Users (user_username)) 
 GO
 
@@ -131,13 +134,13 @@ GO
 CREATE TABLE GDD_FORK.Payment (
 	pay_number numeric(18, 0) NOT NULL,
 	pay_bill_number numeric(18, 0) NOT NULL,
-	pay_branch_name nvarchar(50) NOT NULL,
+	pay_branch_id int NOT NULL,
 	pay_paym_id int NOT NULL,
 	pay_date datetime NOT NULL,
 	pay_total numeric(18, 2) NOT NULL,
 	CONSTRAINT Payment_PK PRIMARY KEY (pay_number),
 	FOREIGN KEY (pay_bill_number) REFERENCES GDD_FORK.Bill(bill_number),
-	FOREIGN KEY (pay_branch_name) REFERENCES GDD_FORK.Branch(branch_name),
+	FOREIGN KEY (pay_branch_id) REFERENCES GDD_FORK.Branch(branch_id),
 	FOREIGN KEY (pay_paym_id) REFERENCES GDD_FORK.Payment_Method(paym_id))
 GO
 
@@ -233,8 +236,8 @@ WHERE m1.ItemFactura_Monto IS NOT NULL
 order by Nro_Factura asc
 GO
 
-INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_number,pay_branch_name,pay_paym_id,pay_date,pay_total)
-SELECT DISTINCT (Pago_nro),Nro_Factura,Sucursal_Nombre,
+INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_number,pay_branch_id,pay_paym_id,pay_date,pay_total)
+SELECT DISTINCT (Pago_nro),Nro_Factura,(SELECT branch_id FROM GDD_FORK.Branch where branch_name = Sucursal_Nombre),
 	(SELECT paym_id 
 	FROM GDD_FORK.Payment_Method 
 	WHERE paym_description = FormaPagoDescripcion)
@@ -274,11 +277,11 @@ VALUES ('pablo', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Cobrador'
 GO
 
 INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
-VALUES ((SELECT branch_name FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'admin')
+VALUES ((SELECT branch_id FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'admin')
 GO
 
 INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
-VALUES ((SELECT branch_name FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'pablo')
+VALUES ((SELECT branch_id FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'pablo')
 GO
 
 
@@ -365,8 +368,9 @@ GO
 CREATE PROCEDURE GDD_FORK.sp_get_branchs(@user_id varchar(150))
 AS
 	BEGIN
-		SELECT branch_name, branch_address, branch_postal_code, branch_active from Branch join Branch_user on branch_id = branch_name
-		where user_id = @user_id AND branch_active = 1
+		SELECT b.branch_id,b.branch_name, b.branch_address, b.branch_postal_code, b.branch_active 
+		from GDD_FORK.Branch b join GDD_FORK.Branch_user bu on bu.branch_id = b.branch_id
+		where bu.user_id = @user_id AND b.branch_active = 1
 	END
 GO
 
@@ -429,9 +433,46 @@ GO
 CREATE PROCEDURE GDD_FORK.sp_search_branchs(@name nvarchar(50) = NULL,@address nvarchar(50) = NULL,@postal_code numeric(18,0) = NULL)
 AS
 	BEGIN
-		SELECT branch_name, branch_address, branch_postal_code,branch_active FROM Branch
+		SELECT branch_id,branch_name, branch_address, branch_postal_code,branch_active FROM Branch
 		WHERE ((@name IS NULL) OR (branch_name like '%'+@name+'%'))
 		AND ((@address IS NULL) OR (branch_address like '%'+@address+'%'))
 		AND ((@postal_code IS NULL) OR (branch_postal_code like concat('%',@postal_code,'%')) )
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_change_active_branch(@branch_id int)
+AS
+BEGIN
+	UPDATE GDD_FORK.Branch set branch_active = (~branch_active) 
+	where branch_id = @branch_id
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_check_postal_code_branch (@postal_code numeric(18,0),@branch_id int = NULL)
+AS
+	BEGIN
+		SELECT * FROM GDD_FORK.Branch 
+		WHERE branch_postal_code = @postal_code 
+		AND ((@branch_id IS NULL) OR (branch_id != @branch_id))
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_insert_update_branch (@branch_id int = NULL,@branch_name nvarchar(50),@branch_address nvarchar(50),@branch_postal_code numeric(18,0),@branch_active bit)
+AS
+	BEGIN
+		IF (@branch_id IS NULL)
+			BEGIN
+				INSERT INTO GDD_FORK.Branch (branch_name,branch_address,branch_postal_code,branch_active) 
+				VALUES (@branch_name,@branch_address,@branch_postal_code,@branch_active) 
+			END
+		ELSE
+			BEGIN
+				UPDATE GDD_FORK.Branch 
+				set branch_name = @branch_name,
+					branch_address = @branch_address,
+					branch_postal_code = @branch_postal_code,
+					branch_active = @branch_active 
+				WHERE branch_id = @branch_id
+			END
 	END
 GO

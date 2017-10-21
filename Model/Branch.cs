@@ -8,6 +8,7 @@ namespace PagoAgilFrba.Model
 {
     public class Branch{
 
+        public int id { get; set; }
         public String name { get; set; }
         public String address { get; set; }
         public Decimal postalCode { get; set; }

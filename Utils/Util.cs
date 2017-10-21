@@ -8,11 +8,11 @@ namespace PagoAgilFrba.Utils
 {
     class Util{
 
-        public static int? convertStringToNumber(String theString){
-            int retval;
-            bool isInt = Int32.TryParse(theString, out retval);
+        public static decimal? convertStringToNumber(String theString){
+            decimal retval;
+            bool isDecimal = Decimal.TryParse(theString, out retval);
 
-            if (isInt) {
+            if (isDecimal){
                 return retval;
             }
 

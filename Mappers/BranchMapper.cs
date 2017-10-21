@@ -12,6 +12,7 @@ namespace PagoAgilFrba.Mappers
         
         public Branch getMapped(Dictionary<string, object> row){
             Branch branch = new Branch();
+            branch.id = (int)row["branch_id"];
             branch.address = (String) row["branch_address"];
             branch.name = (String) row["branch_name"];
             branch.postalCode = (Decimal)row["branch_postal_code"];

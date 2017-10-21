@@ -37,12 +37,12 @@
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.gridBranch = new System.Windows.Forms.DataGridView();
+            this.txtPostalCode = new System.Windows.Forms.TextBox();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPostalCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEdit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.colActive = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.txtPostalCode = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.gridBranch)).BeginInit();
             this.SuspendLayout();
             // 
@@ -117,6 +117,7 @@
             this.btnAdd.TabIndex = 5;
             this.btnAdd.Text = "Agregar";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // gridBranch
             // 
@@ -142,6 +143,15 @@
             this.gridBranch.RowHeadersVisible = false;
             this.gridBranch.Size = new System.Drawing.Size(577, 226);
             this.gridBranch.TabIndex = 6;
+            this.gridBranch.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridBranch_CellContentClick);
+            // 
+            // txtPostalCode
+            // 
+            this.txtPostalCode.Location = new System.Drawing.Point(91, 47);
+            this.txtPostalCode.MaxLength = 18;
+            this.txtPostalCode.Name = "txtPostalCode";
+            this.txtPostalCode.Size = new System.Drawing.Size(131, 20);
+            this.txtPostalCode.TabIndex = 3;
             // 
             // colName
             // 
@@ -170,7 +180,7 @@
             // colEdit
             // 
             this.colEdit.FillWeight = 70F;
-            this.colEdit.HeaderText = "Editar";
+            this.colEdit.HeaderText = "";
             this.colEdit.Name = "colEdit";
             this.colEdit.ReadOnly = true;
             this.colEdit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -183,19 +193,11 @@
             this.colActive.DataPropertyName = "active";
             this.colActive.FalseValue = "false";
             this.colActive.FillWeight = 69.97605F;
-            this.colActive.HeaderText = "Habilitado";
+            this.colActive.HeaderText = "Habilitada";
             this.colActive.IndeterminateValue = "false";
             this.colActive.Name = "colActive";
             this.colActive.ReadOnly = true;
             this.colActive.TrueValue = "true";
-            // 
-            // txtPostalCode
-            // 
-            this.txtPostalCode.Location = new System.Drawing.Point(91, 47);
-            this.txtPostalCode.MaxLength = 18;
-            this.txtPostalCode.Name = "txtPostalCode";
-            this.txtPostalCode.Size = new System.Drawing.Size(131, 20);
-            this.txtPostalCode.TabIndex = 3;
             // 
             // CRUDBranchForm
             // 
@@ -231,11 +233,11 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.DataGridView gridBranch;
+        private System.Windows.Forms.TextBox txtPostalCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAddress;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPostalCode;
         private System.Windows.Forms.DataGridViewButtonColumn colEdit;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colActive;
-        private System.Windows.Forms.TextBox txtPostalCode;
     }
 }
