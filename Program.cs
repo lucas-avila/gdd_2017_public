@@ -1,4 +1,5 @@
-﻿using PagoAgilFrba.CRUDRole;
+﻿using PagoAgilFrba.CRUDCompany;
+using PagoAgilFrba.CRUDRole;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace PagoAgilFrba
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+            Application.Run(new CRUDCompanyForm());
         }
     }
 }

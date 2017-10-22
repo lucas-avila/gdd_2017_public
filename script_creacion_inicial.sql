@@ -500,3 +500,4 @@ AS
 		VALUES (@com_name, @com_address, @com_cuit, @com_ent_id, 1)
 	END
 GO
+

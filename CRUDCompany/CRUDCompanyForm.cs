@@ -28,7 +28,7 @@ namespace PagoAgilFrba.CRUDCompany
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            //new SearchCompaniesForm().Show();
+            new SearchCompaniesForm().Show();
             this.Hide();
         }
     }
