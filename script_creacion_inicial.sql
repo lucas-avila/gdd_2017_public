@@ -489,15 +489,47 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_add_company(
+CREATE PROCEDURE GDD_FORK.sp_insert_update_company(@com_id int = NULL,
 	@com_name nvarchar(255),
 	@com_address nvarchar(255),
 	@com_cuit nvarchar(50),
-	@com_ent_id int)
+	@com_ent_id int,
+	@com_active bit)
 AS
 	BEGIN
-		INSERT INTO GDD_FORK.Company (com_name, com_address, com_cuit, com_ent_id, com_active)
-		VALUES (@com_name, @com_address, @com_cuit, @com_ent_id, 1)
+		IF (@com_id IS NULL)
+			BEGIN
+				INSERT INTO GDD_FORK.Company (com_name, com_address, com_cuit, com_ent_id, com_active)
+				VALUES (@com_name, @com_address, @com_cuit, @com_ent_id, @com_active)
+			END
+		ELSE
+			BEGIN
+				UPDATE GDD_FORK.Company
+				SET com_name = @com_name,
+					com_address = @com_address,
+					com_cuit = @com_cuit,
+					com_ent_id = @com_ent_id,
+					com_active = @com_active
+				WHERE com_id = @com_id
+			END
 	END
 GO
 
+CREATE PROCEDURE GDD_FORK.sp_change_active_company(@com_id int)
+AS
+	BEGIN
+		UPDATE GDD_FORK.Company
+		SET com_active = (~com_active)
+		WHERE com_id = @com_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_companies(@com_name nvarchar(255) = NULL,@com_cuit nvarchar(50) = NULL,@com_ent_id int = NULL)
+AS
+	BEGIN
+		SELECT * FROM GDD_FORK.Company
+		WHERE ((@com_name IS NULL) OR (com_name like '%'+@com_name+'%'))
+		AND ((@com_cuit IS NULL) OR (com_cuit like '%'+@com_cuit+'%'))
+		AND ((@com_ent_id IS NULL) OR (com_ent_id like concat('%',@com_ent_id,'%')) )
+	END
+GO

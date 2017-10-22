@@ -1,6 +1,6 @@
 ﻿namespace PagoAgilFrba.CRUDCompany
 {
-    partial class CreateCompanyForm
+    partial class CUCompanyForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,8 +37,9 @@
             this.entryBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.addressBox = new System.Windows.Forms.TextBox();
-            this.btnCreate = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.statusBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // nameBox
@@ -116,19 +117,19 @@
             this.addressBox.Size = new System.Drawing.Size(181, 20);
             this.addressBox.TabIndex = 8;
             // 
-            // btnCreate
+            // btnSave
             // 
-            this.btnCreate.Location = new System.Drawing.Point(197, 166);
-            this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(75, 23);
-            this.btnCreate.TabIndex = 9;
-            this.btnCreate.Text = "Crear";
-            this.btnCreate.UseVisualStyleBackColor = true;
-            this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
+            this.btnSave.Location = new System.Drawing.Point(197, 216);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 9;
+            this.btnSave.Text = "Guardar";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(15, 166);
+            this.btnCancel.Location = new System.Drawing.Point(12, 216);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 10;
@@ -136,13 +137,24 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // CreateCompanyForm
+            // statusBox
+            // 
+            this.statusBox.AutoSize = true;
+            this.statusBox.Location = new System.Drawing.Point(15, 179);
+            this.statusBox.Name = "statusBox";
+            this.statusBox.Size = new System.Drawing.Size(73, 17);
+            this.statusBox.TabIndex = 11;
+            this.statusBox.Text = "Habilitada";
+            this.statusBox.UseVisualStyleBackColor = true;
+            // 
+            // CUCompanyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 201);
+            this.ClientSize = new System.Drawing.Size(284, 251);
+            this.Controls.Add(this.statusBox);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnCreate);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.addressBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.entryBox);
@@ -152,7 +164,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.nameBox);
-            this.Name = "CreateCompanyForm";
+            this.Name = "CUCompanyForm";
             this.Text = "Crear";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -170,7 +182,8 @@
         private System.Windows.Forms.ComboBox entryBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox addressBox;
-        private System.Windows.Forms.Button btnCreate;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.CheckBox statusBox;
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PagoAgilFrba.Model
 {
-    class Company
+    public class Company
     {
         public String name { get; set; }
         public String address { get; set; }
