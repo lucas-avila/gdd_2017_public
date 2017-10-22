@@ -24,12 +24,11 @@ namespace PagoAgilFrba.CRUDCompany
         private void btnCreate_Click(object sender, EventArgs e)
         {
             new CreateCompanyForm().Show();
-            this.Hide();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            new SearchCompaniesForm().Show();
+            //new SearchCompaniesForm().Show();
             this.Hide();
         }
     }

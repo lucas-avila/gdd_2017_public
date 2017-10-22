@@ -60,11 +60,13 @@ CREATE TABLE GDD_FORK.Entry (
 GO
 
 CREATE TABLE GDD_FORK.Company (
+	com_id int identity NOT NULL,
 	com_cuit nvarchar(50) NOT NULL,
 	com_ent_id int NOT NULL,
 	com_name nvarchar(255) NOT NULL,
 	com_address nvarchar(255) NOT NULL,
-	CONSTRAINT Company_PK PRIMARY KEY (com_cuit),
+	com_active bit NOT NULL,
+	CONSTRAINT Company_PK PRIMARY KEY (com_id),
 	FOREIGN KEY (com_ent_id) REFERENCES GDD_FORK.Entry(ent_id))
 GO
 
@@ -74,9 +76,9 @@ CREATE TABLE GDD_FORK.Invoice (
 	inv_amount numeric(18, 2) NOT NULL,
 	inv_total numeric(18, 2) NOT NULL,
 	inv_fee_percentage numeric NOT NULL,
-	inv_company_cuit nvarchar(50) NOT NULL, 
+	inv_company_id int NOT NULL,
 	CONSTRAINT Invoice_PK PRIMARY KEY (inv_nro),
-	FOREIGN KEY (inv_company_cuit) REFERENCES GDD_FORK.Company(com_cuit))
+	FOREIGN KEY (inv_company_id) REFERENCES GDD_FORK.Company(com_id))
 GO
 
 CREATE TABLE GDD_FORK.Client (
@@ -107,14 +109,14 @@ GO
 CREATE TABLE GDD_FORK.Bill (
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
-	bill_com_cuit nvarchar(50) NOT NULL,
+	bill_com_id int NOT NULL,
 	bill_inv_nro numeric(18, 0) NULL,
 	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
 	CONSTRAINT Bill_PK PRIMARY KEY (bill_number),
 	FOREIGN KEY (bill_cli_dni) REFERENCES GDD_FORK.Client(cli_dni),
-	FOREIGN KEY (bill_com_cuit) REFERENCES GDD_FORK.Company(com_cuit),
+	FOREIGN KEY (bill_com_id) REFERENCES GDD_FORK.Company(com_id),
 	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro))
 GO
 
@@ -173,22 +175,22 @@ FROM gd_esquema.Maestra
 WHERE FormaPagoDescripcion IS NOT NULL
 GO
 
-INSERT INTO GDD_FORK.Company (com_cuit, com_ent_id, com_name, com_address)
+INSERT INTO GDD_FORK.Company (com_cuit, com_ent_id, com_name, com_address, com_active)
 SELECT DISTINCT (REPLACE(Empresa_Cuit, '-', '')),
 		(SELECT ent_id
 		FROM GDD_FORK.Entry
-		WHERE ent_description = Rubro_Descripcion), Empresa_Nombre, Empresa_Direccion
+		WHERE ent_description = Rubro_Descripcion), Empresa_Nombre, Empresa_Direccion, 1
 FROM gd_esquema.Maestra
 GO
 
-INSERT INTO GDD_FORK.Invoice (inv_nro,inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_cuit)
-SELECT DISTINCT(Rendicion_Nro),Rendicion_Fecha,ItemRendicion_Importe,Factura_Total,10,(REPLACE(Empresa_Cuit ,'-',''))
+INSERT INTO GDD_FORK.Invoice (inv_nro,inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_id)
+SELECT DISTINCT(Rendicion_Nro),Rendicion_Fecha,ItemRendicion_Importe,Factura_Total,10,(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-','')))
 FROM gd_esquema.Maestra 
 WHERE Rendicion_Nro is not null
 GO
 
-INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_dni,bill_com_cuit,bill_inv_nro,bill_date,bill_total,bill_expiration)
-SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(REPLACE(m.Empresa_Cuit ,'-','')),
+INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_dni,bill_com_id,bill_inv_nro,bill_date,bill_total,bill_expiration)
+SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-',''))),
 		(SELECT DISTINCT (m2.Rendicion_Nro)
 		FROM gd_esquema.Maestra m2
 		WHERE m2.Nro_Factura = m.Nro_Factura
@@ -437,7 +439,7 @@ AS
 					cli_date_birth = @cli_date_birth,
 					cli_email = @cli_email,
 					cli_address = @cli_address,
-					cli_postal_code = @cli_postal_code)
+					cli_postal_code = @cli_postal_code
 				WHERE cli_id = @cli_id;
 	END
 GO
@@ -455,9 +457,46 @@ CREATE PROCEDURE GDD_FORK.sp_select_client(@cli_dni numeric(18,0),
 				@cli_last_name nvarchar(255))
 AS
 	BEGIN
-		SELECT FROM Client
+		SELECT * FROM Client
 		WHERE ((@cli_dni is null) or (cli_dni = @cli_dni))
 		and ((@cli_name = '') or (cli_name = @cli_name))
 		and ((@cli_last_name = '') or (cli_last_name = @cli_last_name));
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_all_entries
+AS
+	BEGIN
+		SELECT * 
+		FROM GDD_FORK.Entry
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_all_companies
+AS
+	BEGIN
+		SELECT * 
+		FROM GDD_FORK.Company
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_check_cuit(@com_cuit nvarchar(50))
+AS
+	BEGIN
+		SELECT * 
+		FROM GDD_FORK.Company
+		WHERE com_cuit = @com_cuit
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_add_company(
+	@com_name nvarchar(255),
+	@com_address nvarchar(255),
+	@com_cuit nvarchar(50),
+	@com_ent_id int)
+AS
+	BEGIN
+		INSERT INTO GDD_FORK.Company (com_name, com_address, com_cuit, com_ent_id, com_active)
+		VALUES (@com_name, @com_address, @com_cuit, @com_ent_id, 1)
 	END
 GO
