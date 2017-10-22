@@ -1,7 +1,6 @@
 ﻿CREATE schema GDD_FORK
 GO
 
-
 CREATE TABLE GDD_FORK.Funcionality (
 	func_name varchar(100) NOT NULL, 
 	func_id int identity NOT NULL, 
@@ -109,6 +108,7 @@ CREATE TABLE GDD_FORK.BillRefund (
 GO
 
 CREATE TABLE GDD_FORK.Bill (
+	bill_id int identity NOT NULL,
 	bill_number numeric(18, 0) NOT NULL,
 	bill_cli_dni numeric(18, 0) NOT NULL,
 	bill_com_cuit nvarchar(50) NOT NULL,
@@ -116,41 +116,42 @@ CREATE TABLE GDD_FORK.Bill (
 	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
-	CONSTRAINT Bill_PK PRIMARY KEY (bill_number),
+	CONSTRAINT Bill_PK PRIMARY KEY (bill_id),
+	CONSTRAINT Bill_UK_BILL_NUMBER UNIQUE (bill_number),
 	FOREIGN KEY (bill_cli_dni) REFERENCES GDD_FORK.Client(cli_dni),
 	FOREIGN KEY (bill_com_cuit) REFERENCES GDD_FORK.Company(com_cuit),
 	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro))
 GO
 
 CREATE TABLE GDD_FORK.Bill_Refund (
-	bill_id numeric(18, 0) NOT NULL,
+	bill_id int NOT NULL,
 	refund_id int NOT NULL,
 	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id),
-	FOREIGN KEY (bill_id) REFERENCES GDD_FORK.Bill(bill_number),
+	FOREIGN KEY (bill_id) REFERENCES GDD_FORK.Bill(bill_id),
 	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
 GO
 
 
 CREATE TABLE GDD_FORK.Payment (
 	pay_number numeric(18, 0) NOT NULL,
-	pay_bill_number numeric(18, 0) NOT NULL,
+	pay_bill_id int NOT NULL,
 	pay_branch_id int NOT NULL,
 	pay_paym_id int NOT NULL,
 	pay_date datetime NOT NULL,
 	pay_total numeric(18, 2) NOT NULL,
 	CONSTRAINT Payment_PK PRIMARY KEY (pay_number),
-	FOREIGN KEY (pay_bill_number) REFERENCES GDD_FORK.Bill(bill_number),
+	FOREIGN KEY (pay_bill_id) REFERENCES GDD_FORK.Bill(bill_id),
 	FOREIGN KEY (pay_branch_id) REFERENCES GDD_FORK.Branch(branch_id),
 	FOREIGN KEY (pay_paym_id) REFERENCES GDD_FORK.Payment_Method(paym_id))
 GO
 
 CREATE TABLE GDD_FORK.Item (
 	it_number int identity NOT NULL,
-	it_bill_number numeric(18, 0) NOT NULL,
+	it_bill_id int NOT NULL,
 	it_amount numeric(18, 2) NOT NULL,
 	it_quantity numeric(18, 0) NOT NULL,
-	CONSTRAINT Item_PK PRIMARY KEY (it_number, it_bill_number),
-	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
+	CONSTRAINT Item_PK PRIMARY KEY (it_number, it_bill_id),
+	FOREIGN KEY (it_bill_id) REFERENCES GDD_FORK.Bill(bill_id))
 GO
 
 
@@ -229,15 +230,23 @@ SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(REPLACE(m.Empresa_Cuit ,'-','')
 FROM gd_esquema.Maestra m
 GO
 
-INSERT INTO GDD_FORK.Item(it_amount,it_bill_number,it_quantity)
-SELECT distinct (m1.ItemFactura_Monto),Nro_Factura,ItemFactura_Cantidad
+INSERT INTO GDD_FORK.Item(it_amount,it_bill_id,it_quantity)
+SELECT distinct (m1.ItemFactura_Monto),
+	(SELECT bill_id 
+	FROM GDD_FORK.Bill
+	WHERE bill_number = Nro_Factura),ItemFactura_Cantidad
 FROM gd_esquema.Maestra m1
 WHERE m1.ItemFactura_Monto IS NOT NULL 
-order by Nro_Factura asc
 GO
 
-INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_number,pay_branch_id,pay_paym_id,pay_date,pay_total)
-SELECT DISTINCT (Pago_nro),Nro_Factura,(SELECT branch_id FROM GDD_FORK.Branch where branch_name = Sucursal_Nombre),
+INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_id,pay_branch_id,pay_paym_id,pay_date,pay_total)
+SELECT DISTINCT (Pago_nro),
+	(SELECT bill_id 
+	FROM GDD_FORK.Bill
+	WHERE bill_number = Nro_Factura),
+	(SELECT branch_id 
+	FROM GDD_FORK.Branch 
+	WHERE branch_name = Sucursal_Nombre),
 	(SELECT paym_id 
 	FROM GDD_FORK.Payment_Method 
 	WHERE paym_description = FormaPagoDescripcion)
