@@ -39,12 +39,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.dbExpiration = new System.Windows.Forms.DateTimePicker();
             this.gridItems = new System.Windows.Forms.DataGridView();
-            this.btnAddItem = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.colQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDelete = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnAddItem = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridItems)).BeginInit();
             this.SuspendLayout();
             // 
@@ -160,6 +160,31 @@
             this.gridItems.ShowRowErrors = false;
             this.gridItems.Size = new System.Drawing.Size(395, 116);
             this.gridItems.TabIndex = 7;
+            this.gridItems.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridItems_CellContentClick);
+            // 
+            // colQuantity
+            // 
+            this.colQuantity.DataPropertyName = "quantity";
+            this.colQuantity.FillWeight = 70F;
+            this.colQuantity.HeaderText = "Cantidad";
+            this.colQuantity.Name = "colQuantity";
+            this.colQuantity.ReadOnly = true;
+            // 
+            // colAmount
+            // 
+            this.colAmount.DataPropertyName = "amount";
+            this.colAmount.HeaderText = "Monto";
+            this.colAmount.Name = "colAmount";
+            this.colAmount.ReadOnly = true;
+            // 
+            // colDelete
+            // 
+            this.colDelete.FillWeight = 50F;
+            this.colDelete.HeaderText = "";
+            this.colDelete.Name = "colDelete";
+            this.colDelete.ReadOnly = true;
+            this.colDelete.Text = "Borrar";
+            this.colDelete.UseColumnTextForButtonValue = true;
             // 
             // btnAddItem
             // 
@@ -190,30 +215,6 @@
             this.button1.Text = "Cancelar";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // colQuantity
-            // 
-            this.colQuantity.DataPropertyName = "quantity";
-            this.colQuantity.FillWeight = 70F;
-            this.colQuantity.HeaderText = "Cantidad";
-            this.colQuantity.Name = "colQuantity";
-            this.colQuantity.ReadOnly = true;
-            // 
-            // colAmount
-            // 
-            this.colAmount.DataPropertyName = "amount";
-            this.colAmount.HeaderText = "Monto";
-            this.colAmount.Name = "colAmount";
-            this.colAmount.ReadOnly = true;
-            // 
-            // colDelete
-            // 
-            this.colDelete.FillWeight = 50F;
-            this.colDelete.HeaderText = "";
-            this.colDelete.Name = "colDelete";
-            this.colDelete.ReadOnly = true;
-            this.colDelete.Text = "Borrar";
-            this.colDelete.UseColumnTextForButtonValue = true;
             // 
             // CUBill
             // 

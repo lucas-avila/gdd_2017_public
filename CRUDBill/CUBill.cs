@@ -59,8 +59,24 @@ namespace PagoAgilFrba.CRUDBill{
         }
 
         public void newItem(Item item){
+            gridItems.DataSource = null;
             items.Add(item);
             gridItems.DataSource = items;
+        }
+
+        private void gridItems_CellContentClick(object sender, DataGridViewCellEventArgs e){
+            if (e.RowIndex < 0 || e.ColumnIndex < 0){
+                return;
+            }
+            string columnName = this.gridItems.Columns[e.ColumnIndex].Name;
+
+            Item selected = ((Item)gridItems.Rows[e.RowIndex].DataBoundItem);
+
+            if ("colDelete".Equals(columnName)){
+                gridItems.DataSource = null;
+                items.Remove(selected);
+                gridItems.DataSource = items;
+            }
         }
     }
 }
