@@ -543,8 +543,8 @@ AS
 		DECLARE @bills_paid int
 		DECLARE @bills_with_invoices int
 		SELECT @bills_total = COUNT(bill_id) FROM GDD_FORK.Bill WHERE bill_com_id = @com_id
-		SELECT @bills_paid = COUNT(bill_id) FROM GDD_FORK.Bill, GDD_FORK.Payment WHERE (bill_com_id = @com_id AND pay_bill_id = bill_id)
-		SELECT @bills_with_invoices = COUNT(bill_id) FROM GDD_FORK.Bill, GDD_FORK.Invoice WHERE inv_nro = bill_inv_nro
+		SELECT @bills_paid = COUNT(bill_id) FROM GDD_FORK.Bill, GDD_FORK.Payment WHERE bill_com_id = @com_id AND pay_bill_id = bill_id
+		SELECT @bills_with_invoices = COUNT(bill_id) FROM GDD_FORK.Bill, GDD_FORK.Invoice WHERE inv_nro = bill_inv_nro AND bill_com_id = @com_id
 		IF(@bills_paid = @bills_total AND @bills_paid = @bills_with_invoices)
 			BEGIN
 				SET @answer = 1
