@@ -115,10 +115,27 @@ namespace PagoAgilFrba.CRUDCompany
                 return;
             }
 
+            if (!isNew && !statusBox.Checked)
+            {
+                if (!canBeDisable(edit.id))
+                {
+                    MessageBox.Show("No se puede inhabilitar la empresa. Todas sus facturas no están pagas y rendidas.", "Error");
+                    return;
+                }
+            }
+
             addData(name, cuit, address, entry_description, active);
             MessageBox.Show("Se guardó la empresa con éxito", "Éxito");
             this.Hide();
             this.delegateForm.afterUpdate();
+        }
+
+        private Boolean canBeDisable(int com_id)
+        {
+            // Check if all it's bills are paid and had been invoiced.
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@com_id", com_id));
+            return Convert.ToBoolean(StoreManager.getInstance().getStoreProcedureResult("sp_company_can_be_disable", parameters));
         }
 
         private void addData(String name, String cuit, String address, String entry, Boolean active)
