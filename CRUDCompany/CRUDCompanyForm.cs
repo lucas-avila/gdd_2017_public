@@ -65,11 +65,6 @@ namespace PagoAgilFrba.CRUDCompany
             gridCompanies.DataSource = StoreManager.getInstance().executeReadStore<Company>("sp_search_companies", new CompanyMapper(), parameters);
         }
 
-        private void btnModify_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void gridCompanies_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
@@ -87,12 +82,28 @@ namespace PagoAgilFrba.CRUDCompany
 
             if ("active".Equals(columnName))
             {
-                List<Parameter> parameters = new List<Parameter>();
-                parameters.Add(new Parameter("@com_id", selected.id));
-                StoreManager.getInstance().executeNonQuery("sp_change_active_company", parameters);
-                this.doSearch();
+                if (canBeDisable(selected))
+                {
+                    List<Parameter> parameters = new List<Parameter>();
+                    parameters.Add(new Parameter("@com_id", selected.id));
+                    StoreManager.getInstance().executeNonQuery("sp_change_active_company", parameters);
+                    this.doSearch();
+                }
+                else
+                {
+                    MessageBox.Show("No se puede inhabilitar la empresa. Todas sus facturas no están pagas y rendidas.", "Error");
+                    return;
+                }
             }
 
+        }
+
+        private Boolean canBeDisable(Company company)
+        {
+            // Check if all it's bills are paid and had been invoiced.
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@com_id", company.id));
+            return Convert.ToBoolean(StoreManager.getInstance().getStoreProcedureResult("sp_company_can_be_disable", parameters));
         }
 
         private int? getEntryId(string description)
@@ -115,6 +126,16 @@ namespace PagoAgilFrba.CRUDCompany
             nameBox.Text = null;
             cuitBox.Text = null;
             entryBox.SelectedItem = null;
+        }
+
+        private void btnFilter_Click(object sender, EventArgs e)
+        {
+            doSearch();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
         }
     }
 

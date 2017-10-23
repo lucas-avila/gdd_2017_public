@@ -41,6 +41,7 @@ namespace PagoAgilFrba.CRUDCompany
             else
             {
                 this.Text = "Crear Sucursal";
+                statusBox.Checked = true;
                 this.isNew = true;
             }
         }
@@ -57,7 +58,7 @@ namespace PagoAgilFrba.CRUDCompany
             if (!isNew)
             {
                 Entry entry = entries.Find(ent => ent.id == edit.entry);
-                entryBox.SelectedItem = entryBox.Items.IndexOf(entry);
+                entryBox.SelectedIndex = entryBox.Items.IndexOf(entry);
             }
         }
 

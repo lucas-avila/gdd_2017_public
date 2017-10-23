@@ -115,6 +115,7 @@
             this.btnFilter.TabIndex = 7;
             this.btnFilter.Text = "Filtrar";
             this.btnFilter.UseVisualStyleBackColor = true;
+            this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
             // 
             // btnCancel
             // 
@@ -124,6 +125,7 @@
             this.btnCancel.TabIndex = 10;
             this.btnCancel.Text = "Cancelar";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // entryBox
             // 
