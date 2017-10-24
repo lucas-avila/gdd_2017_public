@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using PagoAgilFrba.CRUDRole;
 using PagoAgilFrba.CRUDBranch;
 using PagoAgilFrba.CRUDBill;
+using PagoAgilFrba.CRUDCompany;
 
 namespace PagoAgilFrba
 {
@@ -92,7 +93,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMEmpresa(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new CRUDCompanyForm().Show();
         }
 
         private void onClickABMCliente(object sender, EventArgs e){

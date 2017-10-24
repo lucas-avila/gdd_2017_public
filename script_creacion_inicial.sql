@@ -93,7 +93,7 @@ CREATE TABLE GDD_FORK.Client (
 	cli_email nvarchar(255),
 	cli_address nvarchar(255) NOT NULL,
 	cli_postal_code nvarchar(255) NOT NULL,
-	CONSTRAINT Client_PK PRIMARY KEY (cli_dni))
+	CONSTRAINT Client_PK PRIMARY KEY (cli_id))
 GO
 
 CREATE TABLE GDD_FORK.Payment_Method (
@@ -112,7 +112,7 @@ GO
 CREATE TABLE GDD_FORK.Bill (
 	bill_id int identity NOT NULL,
 	bill_number numeric(18, 0) NOT NULL,
-	bill_cli_dni numeric(18, 0) NOT NULL,
+	bill_cli_id int NOT NULL,
 	bill_com_id int NOT NULL,
 	bill_inv_nro numeric(18, 0) NULL,
 	bill_date datetime NOT NULL, 
@@ -120,7 +120,7 @@ CREATE TABLE GDD_FORK.Bill (
 	bill_expiration datetime NOT NULL,
 	CONSTRAINT Bill_PK PRIMARY KEY (bill_id),
 	CONSTRAINT Bill_UK_BILL_NUMBER UNIQUE (bill_number),
-	FOREIGN KEY (bill_cli_dni) REFERENCES GDD_FORK.Client(cli_dni),
+	FOREIGN KEY (bill_cli_id) REFERENCES GDD_FORK.Client(cli_id),
 	FOREIGN KEY (bill_com_id) REFERENCES GDD_FORK.Company(com_id),
 	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro))
 GO
@@ -226,8 +226,10 @@ FROM gd_esquema.Maestra
 WHERE Rendicion_Nro is not null
 GO
 
-INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_dni,bill_com_id,bill_inv_nro,bill_date,bill_total,bill_expiration)
-SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-',''))),
+INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_id,bill_com_id,bill_inv_nro,bill_date,bill_total,bill_expiration)
+SELECT DISTINCT (m.Nro_Factura)
+,(SELECT cli_id FROM GDD_FORK.Client where cli_dni = m.[Cliente-Dni])
+,(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-',''))),
 		(SELECT DISTINCT (m2.Rendicion_Nro)
 		FROM gd_esquema.Maestra m2
 		WHERE m2.Nro_Factura = m.Nro_Factura
