@@ -149,6 +149,37 @@ CREATE TABLE GDD_FORK.Item (
 	FOREIGN KEY (it_bill_number) REFERENCES GDD_FORK.Bill(bill_number))
 GO
 
+
+--FUNCTIONALITIES
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM ROL')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM CLIENTE')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM EMPRESA')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM SUCURSAL')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('ABM FACTURAS')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('REGISTRO PAGO')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('RENDICION FACTURAS')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('DEVOLUCIONES')
+GO
+
+INSERT INTO GDD_FORK.Funcionality (func_name) VALUES ('LISTADO ESTADISTICO')
+GO
+
+
 --DATA MIGRATION
 
 INSERT INTO GDD_FORK.Client (cli_dni, cli_last_name, cli_name, cli_date_birth, cli_email, cli_address, cli_postal_code)
@@ -226,6 +257,10 @@ GO
 
 INSERT INTO GDD_FORK.Role (role_name,role_active)
 VALUES ('Administrador',1)
+GO
+
+INSERT INTO GDD_FORK.Role_Funcionality (role_id,func_id) 
+	SELECT (SELECT role_id FROM GDD_FORK.Role where role_name = 'Administrador'), func_id FROM GDD_FORK.Funcionality
 GO
 
 INSERT INTO GDD_FORK.Role (role_name,role_active)
