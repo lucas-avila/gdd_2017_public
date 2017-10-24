@@ -1,4 +1,4 @@
-﻿DROP TABLE GDD_FORK.Role_user
+DROP TABLE GDD_FORK.Role_user
 GO
 
 DROP TABLE GDD_FORK.Role_Funcionality
@@ -110,4 +110,37 @@ DROP PROCEDURE [GDD_FORK].[sp_check_postal_code_branch]
 GO
 
 DROP PROCEDURE [GDD_FORK].[sp_insert_update_branch]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_all_entries]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_all_companies]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_create_client]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_update_client]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_delete_client]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_select_client]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_companies]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_change_active_company]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_insert_update_company]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_check_cuit]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_comany_can_be_disable]
 GO
