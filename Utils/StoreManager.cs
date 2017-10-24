@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace PagoAgilFrba.Utils{
 
@@ -93,6 +94,22 @@ namespace PagoAgilFrba.Utils{
                 command.ExecuteNonQuery();
             }
 
+        }
+
+        public int getStoreProcedureResult(String name, List<Parameter> parameters = null)
+        {
+            if (parameters == null)
+            {
+                parameters = new List<Parameter>();
+            }
+            using (SqlConnection connection = getConnection())
+            {
+                connection.Open();
+                SqlCommand command = createSqlCommand(name, connection, parameters);
+                command.Parameters.Add(new SqlParameter("@answer", 1)).Direction = ParameterDirection.Output;
+                command.ExecuteNonQuery();
+                return (int)command.Parameters["@answer"].Value;
+            }
         }
 
         private SqlCommand createSqlCommand(String name, SqlConnection connection, List<Parameter> parameters){

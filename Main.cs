@@ -47,7 +47,7 @@ namespace PagoAgilFrba
 
                 i++;
             }
-                this.Height = cantVisible * button1.Height + 100;
+                this.Height = cantVisible * button1.Height + 170;
         }
 
         private Dictionary<String, EventHandler> getFunctions(){
@@ -61,8 +61,13 @@ namespace PagoAgilFrba
             result.Add("REGISTRO PAGO",onClickRegistroPago);
             result.Add("RENDICION FACTURAS",onClickRendicionFacturas);
             result.Add("LISTADO ESTADISTICO", onClickListadoEstadistico);
+            result.Add("DEVOLUCIONES", onClickDevoluciones);
 
             return result;
+        }
+
+        private void onClickDevoluciones(object sender, EventArgs e){
+            MessageBox.Show("TODO");
         }
 
         private void onClickListadoEstadistico(object sender, EventArgs e){
@@ -104,6 +109,11 @@ namespace PagoAgilFrba
                    .executeReadStore<Functionality>("sp_get_role_functionalities", new FunctionalityMapper(), parameters);
 
             return functionalities;
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e){
+            new LoginForm().Show();
+            this.Hide();
         }
     }
 }
