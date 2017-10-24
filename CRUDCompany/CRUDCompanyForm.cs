@@ -132,6 +132,11 @@ namespace PagoAgilFrba.CRUDCompany
         {
             doSearch();
         }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
     }
 
     public class DelegateCUCompany : CUCompanyForm.DelegateForm

@@ -100,7 +100,7 @@ namespace PagoAgilFrba.CRUDCompany
                 return;
             }
 
-            if (isNew)
+            if (isNew || (!isNew && edit.cuit != cuit))
             {
                 if (cuitAlreadyExists(cuit))
                 {
