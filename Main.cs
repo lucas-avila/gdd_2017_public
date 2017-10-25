@@ -96,7 +96,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMCliente(object sender, EventArgs e){
-            new CRUDClientForm.Show();
+            new UpdateClientForm().Show();
         }
 
         private void onClickABMRole(object sender, EventArgs e){

@@ -541,9 +541,9 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_select_client(@cli_dni numeric(18,0),
-				@cli_name nvarchar(255),
-				@cli_last_name nvarchar(255))
+CREATE PROCEDURE GDD_FORK.sp_select_client(@cli_dni numeric(18,0) = NULL,
+				@cli_name nvarchar(255) = NULL ,
+				@cli_last_name nvarchar(255) = NULL)
 AS
 	BEGIN
 		SELECT * FROM Client

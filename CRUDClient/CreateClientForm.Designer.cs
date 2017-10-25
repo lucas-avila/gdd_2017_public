@@ -1,6 +1,6 @@
-﻿namespace PagoAgilFrba.AbmCliente
+﻿namespace PagoAgilFrba.CRUDClient
 {
-    partial class Form1
+    partial class CreateClientForm
     {
         /// <summary>
         /// Required designer variable.
@@ -41,7 +41,7 @@
             // 
             // txtDni
             // 
-            this.txtDni.Location = new System.Drawing.Point(12, 41);
+            this.txtDni.Location = new System.Drawing.Point(472, 79);
             this.txtDni.Name = "txtDni";
             this.txtDni.Size = new System.Drawing.Size(200, 20);
             this.txtDni.TabIndex = 0;
@@ -49,7 +49,7 @@
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(12, 67);
+            this.txtName.Location = new System.Drawing.Point(472, 105);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(200, 20);
             this.txtName.TabIndex = 1;
@@ -57,7 +57,7 @@
             // 
             // txtLastName
             // 
-            this.txtLastName.Location = new System.Drawing.Point(12, 93);
+            this.txtLastName.Location = new System.Drawing.Point(472, 131);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(200, 20);
             this.txtLastName.TabIndex = 2;
@@ -65,7 +65,7 @@
             // 
             // txtMail
             // 
-            this.txtMail.Location = new System.Drawing.Point(12, 119);
+            this.txtMail.Location = new System.Drawing.Point(472, 157);
             this.txtMail.Name = "txtMail";
             this.txtMail.Size = new System.Drawing.Size(200, 20);
             this.txtMail.TabIndex = 3;
@@ -73,7 +73,7 @@
             // 
             // txtAddress
             // 
-            this.txtAddress.Location = new System.Drawing.Point(12, 171);
+            this.txtAddress.Location = new System.Drawing.Point(472, 209);
             this.txtAddress.Name = "txtAddress";
             this.txtAddress.Size = new System.Drawing.Size(200, 20);
             this.txtAddress.TabIndex = 5;
@@ -81,7 +81,7 @@
             // 
             // txtPostcode
             // 
-            this.txtPostcode.Location = new System.Drawing.Point(12, 197);
+            this.txtPostcode.Location = new System.Drawing.Point(472, 235);
             this.txtPostcode.Name = "txtPostcode";
             this.txtPostcode.Size = new System.Drawing.Size(200, 20);
             this.txtPostcode.TabIndex = 6;
@@ -89,14 +89,14 @@
             // 
             // dtBirthday
             // 
-            this.dtBirthday.Location = new System.Drawing.Point(12, 146);
+            this.dtBirthday.Location = new System.Drawing.Point(472, 184);
             this.dtBirthday.Name = "dtBirthday";
             this.dtBirthday.Size = new System.Drawing.Size(200, 20);
             this.dtBirthday.TabIndex = 7;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 224);
+            this.button1.Location = new System.Drawing.Point(472, 262);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(200, 23);
             this.button1.TabIndex = 8;
@@ -107,7 +107,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 22);
+            this.label1.Location = new System.Drawing.Point(473, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 9;
@@ -117,7 +117,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(223, 263);
+            this.ClientSize = new System.Drawing.Size(703, 464);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dtBirthday);

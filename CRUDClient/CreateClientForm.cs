@@ -9,15 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PagoAgilFrba.AbmCliente
+namespace PagoAgilFrba.CRUDClient
 {
-    public partial class Form1 : Form
+    public partial class CreateClientForm : Form
     {
-        int dni;
+        decimal dni;
         String name, lastName, address, email, postcode;
         DateTime birthday;
 
-        public Form1()
+        public CreateClientForm()
         {
             InitializeComponent();
         }
@@ -43,7 +43,7 @@ namespace PagoAgilFrba.AbmCliente
 
         private void fillAttributes()
         {
-            if (!Int32.TryParse(txtDni.Text, out dni))
+            if (!Decimal.TryParse(txtDni.Text, out dni)) { }
                 //show messagebox informing that the dni entered is not a number
             name = txtName.Text;
             lastName = txtLastName.Text;
