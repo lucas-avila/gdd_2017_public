@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.CRUDRole;
 using PagoAgilFrba.CRUDBranch;
+using PagoAgilFrba.CRUDClient;
 
 namespace PagoAgilFrba
 {
@@ -95,7 +96,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMCliente(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new CRUDClientForm.Show();
         }
 
         private void onClickABMRole(object sender, EventArgs e){

@@ -5,16 +5,20 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PagoAgilFrba.AbmCliente
+namespace PagoAgilFrba.CRUDClient
 {
-    public partial class Form1 : Form
+    public partial class UpdateClientForm : Form
     {
-        public Form1()
+        public UpdateClientForm()
         {
             InitializeComponent();
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
