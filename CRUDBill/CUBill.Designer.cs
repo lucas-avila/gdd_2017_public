@@ -110,7 +110,6 @@
             // 
             // dbDate
             // 
-            this.dbDate.Checked = false;
             this.dbDate.CustomFormat = "";
             this.dbDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dbDate.Location = new System.Drawing.Point(132, 89);
@@ -129,7 +128,6 @@
             // 
             // dbExpiration
             // 
-            this.dbExpiration.Checked = false;
             this.dbExpiration.CustomFormat = "";
             this.dbExpiration.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dbExpiration.Location = new System.Drawing.Point(132, 115);

@@ -114,6 +114,11 @@ namespace PagoAgilFrba.CRUDBill{
                 return;
             }
 
+            if (existBillNumber(billNumber.Value, bill.id)){
+                MessageBox.Show("Ya existe el numero de factura " + txtBillNumber.Text, "Error");
+                return;
+            }
+
             Decimal possibleTotal =  items.Sum<Item>(i => i.amount);
 
             if (!Util.numberInRange(possibleTotal)) {
@@ -124,6 +129,18 @@ namespace PagoAgilFrba.CRUDBill{
             doSave();
             form.doSearch();
             this.Hide();
+        }
+
+        private bool existBillNumber(Decimal billNumber, int bill_id){
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@bill_number", billNumber));
+            if (!isNew){
+                parameters.Add(new Parameter("@bill_id", bill_id));
+            }
+
+            Bill result = StoreManager.getInstance().executeReadSingleResult<Bill>("sp_check_bill_number", new BillMapper(), parameters);
+
+            return result != null;
         }
 
         private void doSave(){

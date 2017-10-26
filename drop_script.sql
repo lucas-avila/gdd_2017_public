@@ -168,3 +168,6 @@ GO
 
 DROP PROCEDURE [GDD_FORK].[sp_search_client_combo]
 GO
+
+DROP PROCEDURE [GDD_FORK].[sp_check_bill_number]
+GO

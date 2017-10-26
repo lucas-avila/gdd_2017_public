@@ -737,3 +737,12 @@ BEGIN
 	SELECT * FROM GDD_FORK.Client
 END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_check_bill_number (@bill_number numeric(18,0),@bill_id int = NULL)
+AS
+	BEGIN
+		SELECT * FROM GDD_FORK.Bill 
+		WHERE bill_number = @bill_number
+		AND ((@bill_id IS NULL) OR (bill_id != @bill_id))
+	END
+GO
