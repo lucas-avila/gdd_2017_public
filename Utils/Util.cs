@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace PagoAgilFrba.Utils
 {
     class Util{
+
+        static DateTime sysDate = DateTime.Parse(ConfigurationManager.AppSettings["fechaSistema"]);
 
         public static decimal? convertStringToNumber(String theString){
             decimal retval;
@@ -17,6 +20,10 @@ namespace PagoAgilFrba.Utils
             }
 
             return null;
+        }
+
+        public static DateTime getSysDate() {
+            return sysDate;
         }
     }
 }

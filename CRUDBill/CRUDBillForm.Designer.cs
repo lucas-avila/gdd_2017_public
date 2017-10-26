@@ -78,9 +78,11 @@
             this.gridBill.RowHeadersVisible = false;
             this.gridBill.Size = new System.Drawing.Size(704, 226);
             this.gridBill.TabIndex = 8;
+            this.gridBill.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridBill_CellContentClick);
             // 
             // colName
             // 
+            this.colName.DataPropertyName = "number";
             this.colName.FillWeight = 105F;
             this.colName.HeaderText = "Nro. Factura";
             this.colName.Name = "colName";
@@ -88,30 +90,35 @@
             // 
             // colCompany
             // 
+            this.colCompany.DataPropertyName = "company";
             this.colCompany.HeaderText = "Empresa";
             this.colCompany.Name = "colCompany";
             this.colCompany.ReadOnly = true;
             // 
             // colClient
             // 
+            this.colClient.DataPropertyName = "client";
             this.colClient.HeaderText = "Cliente";
             this.colClient.Name = "colClient";
             this.colClient.ReadOnly = true;
             // 
             // colDate
             // 
+            this.colDate.DataPropertyName = "date";
             this.colDate.HeaderText = "Fecha de Alta";
             this.colDate.Name = "colDate";
             this.colDate.ReadOnly = true;
             // 
             // colExpiration
             // 
+            this.colExpiration.DataPropertyName = "expiration";
             this.colExpiration.HeaderText = "Fecha de vencimiento";
             this.colExpiration.Name = "colExpiration";
             this.colExpiration.ReadOnly = true;
             // 
             // colTotal
             // 
+            this.colTotal.DataPropertyName = "total";
             this.colTotal.HeaderText = "Total";
             this.colTotal.Name = "colTotal";
             this.colTotal.ReadOnly = true;
@@ -178,6 +185,7 @@
             // txtBillNumber
             // 
             this.txtBillNumber.Location = new System.Drawing.Point(89, 13);
+            this.txtBillNumber.MaxLength = 18;
             this.txtBillNumber.Name = "txtBillNumber";
             this.txtBillNumber.Size = new System.Drawing.Size(129, 20);
             this.txtBillNumber.TabIndex = 0;
@@ -277,13 +285,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView gridBill;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCompany;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colClient;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colExpiration;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
-        private System.Windows.Forms.DataGridViewButtonColumn colEdit;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnClearFilters;
@@ -297,5 +298,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DateTimePicker dbExpiration;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCompany;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colClient;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colExpiration;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
+        private System.Windows.Forms.DataGridViewButtonColumn colEdit;
     }
 }

@@ -60,7 +60,7 @@
             // txtAmount
             // 
             this.txtAmount.Location = new System.Drawing.Point(75, 12);
-            this.txtAmount.MaxLength = 20;
+            this.txtAmount.MaxLength = 21;
             this.txtAmount.Name = "txtAmount";
             this.txtAmount.Size = new System.Drawing.Size(132, 20);
             this.txtAmount.TabIndex = 0;

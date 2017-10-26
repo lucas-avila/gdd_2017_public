@@ -144,3 +144,15 @@ GO
 
 DROP PROCEDURE [GDD_FORK].[sp_comany_can_be_disable]
 GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_bills]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_can_edit_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_insert_update_bill]
+GO

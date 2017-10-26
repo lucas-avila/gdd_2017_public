@@ -96,10 +96,20 @@ namespace PagoAgilFrba.Utils{
 
         }
 
-        public int getStoreProcedureResult(String name, List<Parameter> parameters = null)
-        {
-            if (parameters == null)
-            {
+        public int? executeNonQueryResultPK(String name, List<Parameter> parameters = null){
+            if (parameters == null){
+                parameters = new List<Parameter>();
+            }
+            using (SqlConnection connection = getConnection()){
+                connection.Open();
+                SqlCommand command = createSqlCommand(name, connection, parameters);
+                return (int?)command.ExecuteScalar();
+            }
+
+        }
+
+        public int getStoreProcedureResult(String name, List<Parameter> parameters = null){
+            if (parameters == null){
                 parameters = new List<Parameter>();
             }
             using (SqlConnection connection = getConnection())

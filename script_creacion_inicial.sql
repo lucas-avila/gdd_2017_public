@@ -647,3 +647,60 @@ AS
 			END
 	END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_bills (@bill_number numeric(18,0) = NULL,@bill_com_id int = NULL, @bill_cli_id int = NULL, @bill_date datetime= NULL, @bill_expiration datetime= NULL)
+AS
+BEGIN
+
+	SELECT bill_id,bill_number,bill_date,bill_expiration,bill_total,cli_name as bill_client,com_name as bill_company FROM GDD_FORK.Bill 
+	JOIN GDD_FORK.Company on bill_com_id = com_id
+	JOIN GDD_FORK.Client on bill_cli_id = cli_id
+	WHERE ((@bill_number is NULL) OR (bill_number like CONCAT('%',@bill_number,'%')))
+	AND ((@bill_date is NULL) OR CAST(bill_date AS DATE) = CAST(@bill_date AS DATE) )
+	AND ((@bill_expiration is NULL) OR CAST(bill_expiration AS DATE) = CAST(@bill_expiration AS DATE) )
+	AND ((@bill_com_id is NULL) OR (bill_com_id = @bill_com_id))
+	AND ((@bill_cli_id is NULL) OR (bill_cli_id = @bill_cli_id))
+
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_can_edit_bill (@bill_id int, @answer bit OUTPUT)
+AS 
+BEGIN
+
+	DECLARE @bill_inv_nro int
+	DECLARE @pay_number int
+
+	SELECT @bill_inv_nro=bill_inv_nro,@pay_number=pay_number
+	FROM GDD_FORK.Bill LEFT JOIN GDD_FORK.Payment ON pay_bill_id = bill_id
+	WHERE bill_id = @bill_id
+
+	IF(@bill_inv_nro IS NULL AND @pay_number IS NULL)
+		SET @answer = 1
+	ELSE
+		SET @answer = 0
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_bill (@bill_id int)
+AS 
+BEGIN
+	SELECT * FROM GDD_FORK.Bill WHERE bill_id = @bill_id
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_insert_update_bill(@bill_id int = NULL,@bill_number numeric(18,0),@bill_cli_id int,@bill_com_id int,@bill_date datetime,@bill_expiration datetime,@bill_total numeric (18,2))
+AS 
+BEGIN 
+	
+	IF(@bill_id IS NULL)
+		INSERT INTO GDD_FORK.Bill (bill_number,bill_cli_id,bill_com_id,bill_date,bill_expiration,bill_total)
+		VALUES (@bill_number,@bill_cli_id,@bill_com_id,@bill_date,@bill_expiration,@bill_total)
+	ELSE
+		UPDATE GDD_FORK.Bill set bill_number = @bill_number, bill_cli_id = @bill_cli_id,
+		bill_com_id = @bill_com_id,bill_date=@bill_date,bill_expiration = @bill_expiration,
+		bill_total = @bill_total WHERE bill_id = @bill_id
+
+	SELECT SCOPE_IDENTITY()
+END
+GO

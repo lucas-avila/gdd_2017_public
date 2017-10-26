@@ -34,12 +34,26 @@ namespace PagoAgilFrba.CRUDBill{
             doSearch();
         }
 
-        private void doSearch() { 
-            
+        public void doSearch() {
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@bill_number", Util.convertStringToNumber(txtBillNumber.Text)));
+            parameters.Add(new Parameter("@bill_com_id", cmbCompany.SelectedValue));
+            parameters.Add(new Parameter("@bill_cli_id", cmbClient.SelectedValue));
+
+            if (dbDate.Checked) {
+                parameters.Add(new Parameter("@bill_date", dbDate.Value));
+            }
+
+            if (dbExpiration.Checked){
+                parameters.Add(new Parameter("@bill_expiration", dbExpiration.Value));
+            }
+
+            gridBill.DataSource = StoreManager.getInstance().executeReadStore<BillTable>("sp_search_bills", new BillTableMapper(), parameters);
+
         }
 
         private void btnAdd_Click(object sender, EventArgs e){
-            new CUBill().Show();
+            new CUBill(this).Show();
         }
 
         private void btnClearFilters_Click(object sender, EventArgs e){
@@ -50,6 +64,34 @@ namespace PagoAgilFrba.CRUDBill{
             dbDate.Checked = false;
             dbExpiration.Value = DateTime.Now;
             dbExpiration.Checked = false;
+        }
+
+        private void gridBill_CellContentClick(object sender, DataGridViewCellEventArgs e){
+
+            if (e.RowIndex < 0 || e.ColumnIndex < 0){
+                return;
+            }
+            string columnName = this.gridBill.Columns[e.ColumnIndex].Name;
+
+            BillTable selected = ((BillTable)gridBill.Rows[e.RowIndex].DataBoundItem);
+
+            if ("colEdit".Equals(columnName)){
+
+                List<Parameter> parameters = new List<Parameter>();
+                parameters.Add(new Parameter("@bill_id",selected.id));
+
+                Boolean canEdit = Convert.ToBoolean(StoreManager.getInstance().getStoreProcedureResult("sp_can_edit_bill", parameters));
+
+                if (!canEdit) {
+                    MessageBox.Show("La factura no se puede editar porque posee una rendicion y/o un pago", "Info");
+                    return;
+                }
+
+                Bill bill = StoreManager.getInstance().executeReadSingleResult<Bill>("sp_get_bill", new BillMapper(), parameters);
+
+                (new CUBill(this, bill)).Show();
+            }
+
         }
     }
 }
