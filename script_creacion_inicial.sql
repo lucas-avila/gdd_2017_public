@@ -642,3 +642,35 @@ AS
 			END
 	END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_bills(@cli_dni numeric(18, 0) = NULL, @bill_number numeric(18, 0) = NULL)
+AS
+	BEGIN
+		SELECT * FROM GDD_FORK.Bill 
+		JOIN GDD_FORK.Payment
+		ON pay_bill_id = bill_id
+		WHERE ((@cli_dni IS NULL) OR (bill_cli_dni like @cli_dni))
+		AND ((@bill_number IS NULL) OR (bill_number like @bill_number) )
+		ORDER BY bill_number
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_bill_can_be_refunded(@bill_id int, @answer bit OUTPUT)
+AS
+	BEGIN
+		DECLARE @invoice int
+		SELECT @invoice = COUNT(*) 
+		FROM GDD_FORK.Bill 
+		WHERE bill_id = @bill_id 
+		AND bill_inv_nro IS NOT NULL
+
+		IF(@invoice = 1)
+			BEGIN
+				SET @answer = 1
+			END
+		ELSE
+			BEGIN
+				SET @answer = 0
+			END
+	END
+GO

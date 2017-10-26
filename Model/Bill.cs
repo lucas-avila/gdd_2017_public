@@ -13,7 +13,6 @@ namespace PagoAgilFrba.Model
         public int com_id { get; set; }
         public Decimal total { get; set; }
 
-
         /* Missing:
 	    bill_date datetime NOT NULL, 
 	    bill_expiration datetime NOT NULL,*/
