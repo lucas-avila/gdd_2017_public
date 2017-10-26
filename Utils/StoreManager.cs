@@ -107,7 +107,7 @@ namespace PagoAgilFrba.Utils{
                 object result = command.ExecuteScalar();
 
                 if (result != DBNull.Value) {
-                    return (int)result;
+                    return Convert.ToInt32(result);
                 }
 
                 return null;

@@ -25,7 +25,7 @@ namespace PagoAgilFrba.CRUDBill{
             
             this.form = form;
             this.isNew = (bill == null);
-            this.bill = bill;
+            this.bill = bill != null? bill: new Bill();
             this.toDelete = new List<int>();
 
             initData();
@@ -190,7 +190,9 @@ namespace PagoAgilFrba.CRUDBill{
 
         private List<Parameter> getParametersSaveBill() {
             List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter("@bill_id", bill.id));
+            if (!isNew){
+                parameters.Add(new Parameter("@bill_id", bill.id));
+            }
             parameters.Add(new Parameter("@bill_total",bill.total));
             parameters.Add(new Parameter("@bill_number", bill.number));
             parameters.Add(new Parameter("@bill_date", bill.date));
