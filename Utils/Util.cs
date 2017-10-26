@@ -7,7 +7,7 @@ using System.Configuration;
 
 namespace PagoAgilFrba.Utils
 {
-    class Util{
+    public class Util{
 
         static DateTime sysDate = DateTime.Parse(ConfigurationManager.AppSettings["fechaSistema"]);
 
@@ -20,6 +20,14 @@ namespace PagoAgilFrba.Utils
             }
 
             return null;
+        }
+
+        public static Boolean numberInRange(Decimal minRange, Decimal maxRange, Decimal number) {
+            return number >= minRange && number <= maxRange;
+        }
+
+        public static Boolean numberInRange(Decimal number) {
+            return Util.numberInRange(0, new Decimal(9999999999999999.99), number);
         }
 
         public static DateTime getSysDate() {

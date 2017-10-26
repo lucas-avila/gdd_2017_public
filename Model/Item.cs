@@ -12,6 +12,9 @@ namespace PagoAgilFrba.Model{
         public Decimal amount { get; set; }
         public Decimal quantity { get; set; }
 
+        public Item() { 
+        }
+
         public Item(Decimal amount, Decimal quantity, int? number = null){
             this.number = number;
             this.amount = amount;

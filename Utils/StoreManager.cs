@@ -103,7 +103,14 @@ namespace PagoAgilFrba.Utils{
             using (SqlConnection connection = getConnection()){
                 connection.Open();
                 SqlCommand command = createSqlCommand(name, connection, parameters);
-                return (int?)command.ExecuteScalar();
+                
+                object result = command.ExecuteScalar();
+
+                if (result != DBNull.Value) {
+                    return (int)result;
+                }
+
+                return null;
             }
 
         }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.Model;
 using PagoAgilFrba.Utils;
+using PagoAgilFrba.Mappers;
 
 namespace PagoAgilFrba.CRUDBill{
     public partial class CUBill : Form{
@@ -21,16 +22,59 @@ namespace PagoAgilFrba.CRUDBill{
 
         public CUBill(CRUDBillForm form,Bill bill = null){
             InitializeComponent();
-            initData();
+            
             this.form = form;
             this.isNew = (bill == null);
             this.bill = bill;
             this.toDelete = new List<int>();
+
+            initData();
+            populateCombos();
+
+            if (!isNew){
+                setData();
+            }
+        }
+
+        private void setData() {
+            txtBillNumber.Text = bill.number.ToString();
+            cmbClient.SelectedValue = bill.cli_id;
+            cmbCompany.SelectedValue = bill.com_id;
+            dbDate.Value = bill.date;
+            dbExpiration.Value = bill.expiration;
+            
+            gridItems.DataSource = items;
+        }
+
+        private void populateCombos(){
+            setCmbCompany();
+            setCmbClient();
+        }
+
+        private void setCmbCompany(){
+            cmbCompany.DataSource = StoreManager.getInstance().executeReadStore<Company>("sp_search_companies", new CompanyMapper());
+            cmbCompany.DisplayMember = "name";
+            cmbCompany.ValueMember = "id";
+            cmbCompany.SelectedItem = null;
+        }
+
+        private void setCmbClient(){
+            cmbClient.DataSource = StoreManager.getInstance().executeReadStore<ClientCombo>("sp_search_client_combo", new ClientComboMapper());
+            cmbClient.DisplayMember = "name";
+            cmbClient.ValueMember = "id";
+            cmbClient.SelectedItem = null;
         }
 
         private void initData(){
             gridItems.AutoGenerateColumns = false;
-            items = new List<Item>();
+
+            if (!isNew){
+                List<Parameter> parameters = new List<Parameter>();
+                parameters.Add(new Parameter("@it_bill_id", bill.id));
+                items = StoreManager.getInstance().executeReadStore<Item>("sp_search_items_bill", new ItemMapper(), parameters);
+            }else{
+                items = new List<Item>();
+            }
         }
 
         private void btnAddItem_Click(object sender, EventArgs e){
@@ -70,6 +114,13 @@ namespace PagoAgilFrba.CRUDBill{
                 return;
             }
 
+            Decimal possibleTotal =  items.Sum<Item>(i => i.amount);
+
+            if (!Util.numberInRange(possibleTotal)) {
+                MessageBox.Show("El valor de la factura es demasiado elevado (maximo 18 caracteres)", "Error");
+                return;
+            }
+
             doSave();
             form.doSearch();
             this.Hide();
@@ -94,7 +145,7 @@ namespace PagoAgilFrba.CRUDBill{
 
             foreach (Item it in items) {
                 List<Parameter> parameters = new List<Parameter>();
-                parameters.Add(new Parameter("@it_bill_number", bill.id));
+                parameters.Add(new Parameter("@it_bill_id", bill.id));
                 parameters.Add(new Parameter("@it_number", it.number));
                 parameters.Add(new Parameter("@it_amount", it.amount));
                 parameters.Add(new Parameter("@it_quantity", it.quantity));
@@ -105,14 +156,14 @@ namespace PagoAgilFrba.CRUDBill{
         private void deleteItems(){
             foreach(int numberDelete in toDelete){
                 List<Parameter> parameters = new List<Parameter>();
-                parameters.Add(new Parameter("@it_bill_number", bill.id));
+                parameters.Add(new Parameter("@it_bill_id", bill.id));
                 parameters.Add(new Parameter("@it_number", numberDelete));
                 StoreManager.getInstance().executeNonQuery("sp_delete_item", parameters);
             }
         }
 
         private void getData(){
-            bill.total = Math.Round(items.Sum<Item>(i => i.amount), 2);
+            bill.total = items.Sum<Item>(i => i.amount);
             bill.number = Util.convertStringToNumber(txtBillNumber.Text).Value;
             bill.date = dbDate.Value;
             bill.com_id = (int)cmbCompany.SelectedValue;

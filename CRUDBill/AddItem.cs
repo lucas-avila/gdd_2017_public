@@ -22,9 +22,7 @@ namespace PagoAgilFrba.CRUDBill{
 
         private void btnAdd_Click(object sender, EventArgs e){
 
-            decimal? amount = Util.convertStringToNumber(txtAmount.Text);
-
-            if (!amount.HasValue || amount <= 0) {
+            if (dbAmount.Value <= 0) {
                 MessageBox.Show("Debe ingresar un monto mayor a 0 (solo numeros con el formato #,##)","Error");
                 return;
             }
@@ -34,7 +32,7 @@ namespace PagoAgilFrba.CRUDBill{
                 return;
             }
 
-            form.newItem(new Item(amount.Value, numQuantity.Value));
+            form.newItem(new Item(dbAmount.Value, numQuantity.Value));
             this.Hide();
         }
 

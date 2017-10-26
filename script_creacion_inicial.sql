@@ -704,3 +704,36 @@ BEGIN
 	SELECT SCOPE_IDENTITY()
 END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_delete_item(@it_number int, @it_bill_id int)
+AS
+BEGIN
+	DELETE FROM GDD_FORK.Item WHERE it_bill_id = @it_bill_id AND it_number = @it_number
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_insert_update_item(@it_number int=NULL, @it_bill_id int,@it_quantity numeric(18,0),@it_amount numeric(18,2))
+AS
+BEGIN
+	IF(@it_number IS NULL)
+		INSERT INTO GDD_FORK.Item (it_bill_id,it_quantity,it_amount)
+		VALUES (@it_bill_id,@it_quantity,@it_amount)
+	ELSE
+		UPDATE GDD_FORK.Item SET it_quantity=@it_quantity,it_amount=@it_amount
+		WHERE it_bill_id = @it_bill_id AND it_number = @it_number
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_items_bill(@it_bill_id int)
+AS
+BEGIN
+	SELECT * FROM GDD_FORK.Item WHERE it_bill_id = @it_bill_id
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_client_combo
+AS
+BEGIN
+	SELECT * FROM GDD_FORK.Client
+END
+GO

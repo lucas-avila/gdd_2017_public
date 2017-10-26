@@ -30,11 +30,12 @@
         {
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.txtAmount = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.numQuantity = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.dbAmount = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dbAmount)).BeginInit();
             this.SuspendLayout();
             // 
             // btnAdd
@@ -57,14 +58,6 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // txtAmount
-            // 
-            this.txtAmount.Location = new System.Drawing.Point(75, 12);
-            this.txtAmount.MaxLength = 21;
-            this.txtAmount.Name = "txtAmount";
-            this.txtAmount.Size = new System.Drawing.Size(132, 20);
-            this.txtAmount.TabIndex = 0;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -78,8 +71,8 @@
             // 
             this.numQuantity.Location = new System.Drawing.Point(75, 39);
             this.numQuantity.Maximum = new decimal(new int[] {
-            30000,
-            0,
+            -1486618625,
+            232830643,
             0,
             0});
             this.numQuantity.Name = "numQuantity";
@@ -95,20 +88,34 @@
             this.label2.TabIndex = 5;
             this.label2.Text = "Cantidad :";
             // 
+            // dbAmount
+            // 
+            this.dbAmount.DecimalPlaces = 2;
+            this.dbAmount.Location = new System.Drawing.Point(75, 12);
+            this.dbAmount.Maximum = new decimal(new int[] {
+            -1486618625,
+            232830643,
+            0,
+            131072});
+            this.dbAmount.Name = "dbAmount";
+            this.dbAmount.Size = new System.Drawing.Size(132, 20);
+            this.dbAmount.TabIndex = 6;
+            // 
             // AddItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(227, 126);
+            this.Controls.Add(this.dbAmount);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numQuantity);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtAmount);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAdd);
             this.Name = "AddItem";
             this.Text = "Agregar Item";
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dbAmount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -118,9 +125,9 @@
 
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.TextBox txtAmount;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numQuantity;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown dbAmount;
     }
 }

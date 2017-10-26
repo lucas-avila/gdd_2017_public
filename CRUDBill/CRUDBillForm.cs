@@ -17,17 +17,22 @@ namespace PagoAgilFrba.CRUDBill{
             InitializeComponent();
 
             setCmbCompany();
-
+            setCmbClient();
             gridBill.AutoGenerateColumns = false;
         }
 
         private void setCmbCompany(){
-            cmbCompany.Name = "name";
             cmbCompany.DataSource = StoreManager.getInstance().executeReadStore<Company>("sp_search_companies", new CompanyMapper());
-
             cmbCompany.DisplayMember = "name";
             cmbCompany.ValueMember = "id";
             cmbCompany.SelectedItem = null;
+        }
+
+        private void setCmbClient(){
+            cmbClient.DataSource = StoreManager.getInstance().executeReadStore<ClientCombo>("sp_search_client_combo",new ClientComboMapper());
+            cmbClient.DisplayMember = "name";
+            cmbClient.ValueMember = "id";
+            cmbClient.SelectedItem = null;
         }
 
         private void btnSearch_Click(object sender, EventArgs e){

@@ -156,3 +156,15 @@ GO
 
 DROP PROCEDURE [GDD_FORK].[sp_insert_update_bill]
 GO
+
+DROP PROCEDURE [GDD_FORK].[sp_delete_item]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_insert_update_item]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_items_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_client_combo]
+GO
