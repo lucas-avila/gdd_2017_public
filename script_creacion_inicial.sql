@@ -659,18 +659,32 @@ CREATE PROCEDURE GDD_FORK.sp_bill_can_be_refunded(@bill_id int, @answer bit OUTP
 AS
 	BEGIN
 		DECLARE @invoice int
-		SELECT @invoice = COUNT(*) 
-		FROM GDD_FORK.Bill 
-		WHERE bill_id = @bill_id 
-		AND bill_inv_nro IS NOT NULL
+		SELECT @invoice = COUNT(*) FROM GDD_FORK.Bill WHERE bill_id = @bill_id AND bill_inv_nro IS NOT NULL
 
-		IF(@invoice = 1)
-			BEGIN
-				SET @answer = 1
-			END
-		ELSE
+		IF(@invoice > 0)
 			BEGIN
 				SET @answer = 0
 			END
+		ELSE
+			BEGIN
+				SET @answer = 1
+			END
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_refund_bill(@bill_id int, @ref_reason nvarchar(255))
+AS
+	BEGIN
+		DELETE FROM GDD_FORK.Payment
+		WHERE pay_bill_id = @bill_id
+		
+		INSERT INTO GDD_FORK.BillRefund (ref_reason) 
+		VALUES (@ref_reason)
+
+		DECLARE @ref_id int
+		SELECT @ref_id = SCOPE_IDENTITY()
+
+		INSERT INTO GDD_FORK.Bill_Refund (bill_id, refund_id)
+		VALUES (@bill_id, @ref_id)
 	END
 GO

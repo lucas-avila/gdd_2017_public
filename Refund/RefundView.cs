@@ -17,6 +17,8 @@ namespace PagoAgilFrba.Refund
         public RefundView()
         {
             InitializeComponent();
+            billsBox.DataSource = new List<Bill>();
+            setBillsBox();
         }
 
         public void setBillsBox()
@@ -75,9 +77,7 @@ namespace PagoAgilFrba.Refund
             {
                 if (canBeRefunded(selected))
                 {
-                    MessageBox.Show("Good job", "Success");
-                    return;
-                    //TODO: do the refund...
+                    new ReasonForm(selected.id, this).Show();
                 }
                 else
                 {
@@ -93,6 +93,11 @@ namespace PagoAgilFrba.Refund
             List<Parameter> parameters = new List<Parameter>();
             parameters.Add(new Parameter("@bill_id", bill.id));
             return Convert.ToBoolean(StoreManager.getInstance().getStoreProcedureResult("sp_bill_can_be_refunded", parameters));
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
         }
     }
 }

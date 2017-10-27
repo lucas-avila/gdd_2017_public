@@ -35,6 +35,7 @@
             this.billNroBox = new System.Windows.Forms.TextBox();
             this.billsBox = new System.Windows.Forms.DataGridView();
             this.refund = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.billsBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,24 +52,24 @@
             // 
             this.dniBox.Location = new System.Drawing.Point(105, 6);
             this.dniBox.Name = "dniBox";
-            this.dniBox.Size = new System.Drawing.Size(215, 20);
+            this.dniBox.Size = new System.Drawing.Size(101, 20);
             this.dniBox.TabIndex = 1;
             this.dniBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(352, 12);
+            this.btnSearch.Location = new System.Drawing.Point(183, 41);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 2;
-            this.btnSearch.Text = "Buscar facturas";
+            this.btnSearch.Text = "Buscar";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 38);
+            this.label2.Location = new System.Drawing.Point(226, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(84, 13);
             this.label2.TabIndex = 3;
@@ -76,7 +77,7 @@
             // 
             // billNroBox
             // 
-            this.billNroBox.Location = new System.Drawing.Point(105, 35);
+            this.billNroBox.Location = new System.Drawing.Point(316, 6);
             this.billNroBox.Name = "billNroBox";
             this.billNroBox.Size = new System.Drawing.Size(101, 20);
             this.billNroBox.TabIndex = 4;
@@ -88,7 +89,7 @@
             this.billsBox.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.billsBox.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.refund});
-            this.billsBox.Location = new System.Drawing.Point(12, 79);
+            this.billsBox.Location = new System.Drawing.Point(15, 70);
             this.billsBox.Name = "billsBox";
             this.billsBox.ReadOnly = true;
             this.billsBox.Size = new System.Drawing.Size(415, 150);
@@ -104,11 +105,22 @@
             this.refund.Text = "Reembolsar";
             this.refund.UseColumnTextForButtonValue = true;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(15, 226);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 6;
+            this.btnCancel.Text = "Cancelar";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // RefundView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(439, 261);
+            this.ClientSize = new System.Drawing.Size(439, 252);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.billsBox);
             this.Controls.Add(this.billNroBox);
             this.Controls.Add(this.label2);
@@ -132,5 +144,6 @@
         private System.Windows.Forms.TextBox billNroBox;
         private System.Windows.Forms.DataGridView billsBox;
         private System.Windows.Forms.DataGridViewButtonColumn refund;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
