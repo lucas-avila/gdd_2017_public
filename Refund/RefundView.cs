@@ -46,6 +46,11 @@ namespace PagoAgilFrba.Refund
                 MessageBox.Show("Debe ingresar algún parámetro de búsqueda.", "Error");
                 return;
             }
+            if(!dniBox.Text.All(Char.IsDigit) || !billNroBox.Text.All(Char.IsDigit))
+            {
+                MessageBox.Show("Debe ingresar solo números en los campos de búsqueda.", "Error");
+                return;
+            }
             List<Parameter> parameters = new List<Parameter>();
             parameters.Add(new Parameter("@cli_dni", Util.convertStringToNumber(dniBox.Text)));
             parameters.Add(new Parameter("@bill_number", Util.convertStringToNumber(billNroBox.Text)));
