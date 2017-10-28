@@ -96,7 +96,7 @@ namespace PagoAgilFrba.Utils{
 
         }
 
-        public int? executeNonQueryResultPK(String name, List<Parameter> parameters = null){
+        public int? executeNonQueryResultPKInt(String name, List<Parameter> parameters = null){
             if (parameters == null){
                 parameters = new List<Parameter>();
             }
@@ -112,7 +112,24 @@ namespace PagoAgilFrba.Utils{
 
                 return null;
             }
+        }
 
+        public decimal? executeNonQueryResultPKDecimal(String name, List<Parameter> parameters = null){
+            if (parameters == null){
+                parameters = new List<Parameter>();
+            }
+            using (SqlConnection connection = getConnection()){
+                connection.Open();
+                SqlCommand command = createSqlCommand(name, connection, parameters);
+
+                object result = command.ExecuteScalar();
+
+                if (result != DBNull.Value){
+                    return Convert.ToDecimal(result);
+                }
+
+                return null;
+            }
         }
 
         public int getStoreProcedureResult(String name, List<Parameter> parameters = null){

@@ -102,6 +102,16 @@ CREATE TABLE GDD_FORK.Payment_Method (
 	CONSTRAINT Payment_Method_PK PRIMARY KEY (paym_id))
 GO
 
+CREATE TABLE GDD_FORK.Payment (
+	pay_number numeric(18, 0) identity NOT NULL,
+	pay_branch_id int NOT NULL,
+	pay_paym_id int NOT NULL,
+	pay_date datetime NOT NULL,
+	pay_total numeric(18, 2) NOT NULL,
+	CONSTRAINT Payment_PK PRIMARY KEY (pay_number),
+	FOREIGN KEY (pay_branch_id) REFERENCES GDD_FORK.Branch(branch_id),
+	FOREIGN KEY (pay_paym_id) REFERENCES GDD_FORK.Payment_Method(paym_id))
+GO
 
 CREATE TABLE GDD_FORK.BillRefund (
 	ref_id int identity NOT NULL,
@@ -115,6 +125,7 @@ CREATE TABLE GDD_FORK.Bill (
 	bill_cli_id int NOT NULL,
 	bill_com_id int NOT NULL,
 	bill_inv_nro numeric(18, 0) NULL,
+	bill_pay_nro numeric(18, 0) NULL,
 	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
@@ -122,7 +133,8 @@ CREATE TABLE GDD_FORK.Bill (
 	CONSTRAINT Bill_UK_BILL_NUMBER UNIQUE (bill_number),
 	FOREIGN KEY (bill_cli_id) REFERENCES GDD_FORK.Client(cli_id),
 	FOREIGN KEY (bill_com_id) REFERENCES GDD_FORK.Company(com_id),
-	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro))
+	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro),
+	FOREIGN KEY (bill_pay_nro) REFERENCES GDD_FORK.Payment(pay_number))
 GO
 
 CREATE TABLE GDD_FORK.Bill_Refund (
@@ -131,21 +143,6 @@ CREATE TABLE GDD_FORK.Bill_Refund (
 	CONSTRAINT Bill_Refund_PK PRIMARY KEY (bill_id, refund_id),
 	FOREIGN KEY (bill_id) REFERENCES GDD_FORK.Bill(bill_id),
 	FOREIGN KEY (refund_id) REFERENCES GDD_FORK.BillRefund(ref_id))
-GO
-
-
-CREATE TABLE GDD_FORK.Payment (
-	pay_number numeric(18, 0) NOT NULL,
-	pay_bill_id int NOT NULL,
-	pay_branch_id int NOT NULL,
-	pay_paym_id int NOT NULL,
-	pay_date datetime NOT NULL,
-	pay_total numeric(18, 2) NOT NULL,
-	CONSTRAINT Payment_PK PRIMARY KEY (pay_number),
-	FOREIGN KEY (pay_bill_id) REFERENCES GDD_FORK.Bill(bill_id),
-	FOREIGN KEY (pay_branch_id) REFERENCES GDD_FORK.Branch(branch_id),
-	FOREIGN KEY (pay_bill_id) REFERENCES GDD_FORK.Bill(bill_id),
-	FOREIGN KEY (pay_paym_id) REFERENCES GDD_FORK.Payment_Method(paym_id))
 GO
 
 CREATE TABLE GDD_FORK.Item (
@@ -226,15 +223,36 @@ FROM gd_esquema.Maestra
 WHERE Rendicion_Nro is not null
 GO
 
-INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_id,bill_com_id,bill_inv_nro,bill_date,bill_total,bill_expiration)
+SET IDENTITY_INSERT GDD_FORK.Payment ON;  
+GO 
+
+INSERT INTO GDD_FORK.Payment(pay_number,pay_branch_id,pay_paym_id,pay_date,pay_total)
+SELECT DISTINCT (Pago_nro),
+(SELECT branch_id FROM GDD_FORK.Branch where branch_name = Sucursal_Nombre),
+	(SELECT paym_id 
+	FROM GDD_FORK.Payment_Method 
+	WHERE paym_description = FormaPagoDescripcion)
+,Pago_Fecha,Total 
+FROM gd_esquema.Maestra
+WHERE Pago_nro IS NOT NULL
+GO
+
+SET IDENTITY_INSERT GDD_FORK.Payment OFF;  
+GO 
+
+INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_id,bill_com_id,bill_inv_nro,bill_pay_nro,bill_date,bill_total,bill_expiration)
 SELECT DISTINCT (m.Nro_Factura)
 ,(SELECT cli_id FROM GDD_FORK.Client where cli_dni = m.[Cliente-Dni])
 ,(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-',''))),
 		(SELECT DISTINCT (m2.Rendicion_Nro)
 		FROM gd_esquema.Maestra m2
 		WHERE m2.Nro_Factura = m.Nro_Factura
-		AND m2.Rendicion_Nro IS NOT NULL)
-,m.Factura_Fecha,m.Factura_Total,m.Factura_Fecha_Vencimiento
+		AND m2.Rendicion_Nro IS NOT NULL),
+		(SELECT DISTINCT (m3.Pago_nro)
+		FROM gd_esquema.Maestra m3
+		WHERE m3.Nro_Factura = m.Nro_Factura
+		AND m3.Pago_nro IS NOT NULL)
+		,m.Factura_Fecha,m.Factura_Total,m.Factura_Fecha_Vencimiento
 FROM gd_esquema.Maestra m
 GO
 
@@ -245,17 +263,6 @@ SELECT distinct (m1.ItemFactura_Monto),
 	WHERE bill_number = Nro_Factura),ItemFactura_Cantidad
 FROM gd_esquema.Maestra m1
 WHERE m1.ItemFactura_Monto IS NOT NULL 
-GO
-
-INSERT INTO GDD_FORK.Payment(pay_number,pay_bill_id,pay_branch_id,pay_paym_id,pay_date,pay_total)
-SELECT DISTINCT (Pago_nro),(SELECT bill_id FROM GDD_FORK.Bill WHERE bill_number = Nro_Factura),
-(SELECT branch_id FROM GDD_FORK.Branch where branch_name = Sucursal_Nombre),
-	(SELECT paym_id 
-	FROM GDD_FORK.Payment_Method 
-	WHERE paym_description = FormaPagoDescripcion)
-,Pago_Fecha,Total 
-FROM gd_esquema.Maestra
-WHERE Pago_nro IS NOT NULL
 GO
 
 --USERS
@@ -635,7 +642,7 @@ AS
 		DECLARE @bills_paid int
 		DECLARE @bills_with_invoices int
 		SELECT @bills_total = COUNT(bill_id) FROM GDD_FORK.Bill WHERE bill_com_id = @com_id
-		SELECT @bills_paid = COUNT(bill_id) FROM GDD_FORK.Bill, GDD_FORK.Payment WHERE bill_com_id = @com_id AND pay_bill_id = bill_id
+		SELECT @bills_paid = COUNT(bill_id) FROM GDD_FORK.Bill WHERE bill_com_id = @com_id AND bill_pay_nro IS NOT NULL
 		SELECT @bills_with_invoices = COUNT(bill_id) FROM GDD_FORK.Bill, GDD_FORK.Invoice WHERE inv_nro = bill_inv_nro AND bill_com_id = @com_id
 		IF(@bills_paid = @bills_total AND @bills_paid = @bills_with_invoices)
 			BEGIN
@@ -671,8 +678,8 @@ BEGIN
 	DECLARE @bill_inv_nro int
 	DECLARE @pay_number int
 
-	SELECT @bill_inv_nro=bill_inv_nro,@pay_number=pay_number
-	FROM GDD_FORK.Bill LEFT JOIN GDD_FORK.Payment ON pay_bill_id = bill_id
+	SELECT @bill_inv_nro=bill_inv_nro,@pay_number=bill_pay_nro
+	FROM GDD_FORK.Bill
 	WHERE bill_id = @bill_id
 
 	IF(@bill_inv_nro IS NULL AND @pay_number IS NULL)
@@ -745,4 +752,46 @@ AS
 		WHERE bill_number = @bill_number
 		AND ((@bill_id IS NULL) OR (bill_id != @bill_id))
 	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_payment_methods
+AS
+	BEGIN 
+		SELECT * FROM GDD_FORK.Payment_Method
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_add_payment(@pay_branch_id int, @pay_paym_id int, @pay_date datetime, @pay_total numeric(18,2))
+AS
+	BEGIN 
+		INSERT INTO GDD_FORK.Payment (pay_branch_id,pay_paym_id,pay_date,pay_total)
+		VALUES (@pay_branch_id,@pay_paym_id,@pay_date,@pay_total)
+		SELECT SCOPE_IDENTITY()
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_update_bill_payment(@bill_id int, @bill_pay_nro numeric(18,0))
+AS
+	BEGIN 
+		UPDATE GDD_FORK.Bill set bill_pay_nro = @bill_pay_nro
+		WHERE bill_id = @bill_id
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_company_active (@com_id int, @answer bit OUTPUT)
+AS 
+BEGIN
+	SELECT @answer=com_active
+	FROM GDD_FORK.Company
+	WHERE com_id = @com_id
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_bill_by_number (@bill_number numeric(18,2))
+AS 
+BEGIN
+	SELECT *
+	FROM GDD_FORK.Bill
+	WHERE bill_number = @bill_number
+END
 GO

@@ -14,6 +14,7 @@ using PagoAgilFrba.CRUDRole;
 using PagoAgilFrba.CRUDBranch;
 using PagoAgilFrba.CRUDBill;
 using PagoAgilFrba.CRUDCompany;
+using PagoAgilFrba.CRUDPayment;
 
 namespace PagoAgilFrba
 {
@@ -81,7 +82,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickRegistroPago(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new CUPayment(user.actualBranch).Show();
         }
 
         private void onClickABMFacturas(object sender, EventArgs e){
