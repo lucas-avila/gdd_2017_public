@@ -1,4 +1,5 @@
-﻿using PagoAgilFrba.Utils;
+﻿using PagoAgilFrba.Model;
+using PagoAgilFrba.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,15 +18,47 @@ namespace PagoAgilFrba.CRUDClient
         String name, lastName, address, email, postcode;
         DateTime birthday;
 
-        public CreateClientForm()
+        private DelegateForm delegateForm;
+        private Client edit;
+        private Boolean isNew;
+
+        //CU -> Create/Update
+        public CreateClientForm(DelegateForm delegateForm, Client edit = null)
         {
             InitializeComponent();
+            setInitialData(edit);
+            this.delegateForm = delegateForm;
+            this.edit = edit != null ? edit : new Client();
+        }
+
+        private void setInitialData(Client edit)
+        {
+            if (edit != null)
+            {
+                this.Text = "Editar cliente";
+                txtName.Text = edit.name;
+                txtAddress.Text = edit.address;
+                txtPostcode.Text = edit.postCode;
+                this.isNew = false;
+            }
+            else
+            {
+                this.Text = "Agregar cliente";
+                this.isNew = true;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             fillAttributes();
-            StoreManager.getInstance().executeNonQuery("sp_create_client", generateQueryParams());
+            List<Parameter> parameters = generateQueryParams();
+            if (isNew)
+                StoreManager.getInstance().executeNonQuery("sp_create_client", parameters);
+            else
+            {
+                parameters.Add(new Parameter("@cli_id", edit.id));
+                StoreManager.getInstance().executeNonQuery("sp_update_client", parameters);
+            }
         }
 
         private List<Parameter> generateQueryParams()
@@ -51,6 +84,11 @@ namespace PagoAgilFrba.CRUDClient
             email = txtMail.Text;
             postcode = txtPostcode.Text;
             birthday = dtBirthday.Value;
+        }
+
+        public interface DelegateForm
+        {
+            void afterUpdate();
         }
     }
 }

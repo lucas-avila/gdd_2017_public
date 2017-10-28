@@ -12,6 +12,7 @@ namespace PagoAgilFrba.Mappers
         public Client getMapped(Dictionary<string, object> row)
         {
             Client client = new Client();
+            client.id = (int)row["cli_id"];
             client.dni = (decimal)row["cli_dni"];
             client.name = (String)row["cli_name"];
             client.lastName = (String)row["cli_last_name"];

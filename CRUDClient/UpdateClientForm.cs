@@ -40,7 +40,39 @@ namespace PagoAgilFrba.CRUDClient
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            new CreateClientForm().Show();
+            new CreateClientForm(new DelegateCUClient(this)).Show();
+        }
+
+        private void gridClients_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            {
+                return;
+            }
+            string columnName = this.gridClients.Columns[e.ColumnIndex].Name;
+
+            Client selected = ((Client)gridClients.Rows[e.RowIndex].DataBoundItem);
+
+            if ("colEdit".Equals(columnName))
+            {
+                (new CreateClientForm(new DelegateCUClient(this), selected)).Show();
+            }
+        }
+
+        private class DelegateCUClient : CreateClientForm.DelegateForm
+        {
+
+            private UpdateClientForm form;
+
+            public DelegateCUClient(UpdateClientForm form)
+            {
+                this.form = form;
+            }
+
+            public void afterUpdate()
+            {
+                form.doSearch();
+            }
         }
     }
 }

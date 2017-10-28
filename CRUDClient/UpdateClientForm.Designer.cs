@@ -45,7 +45,7 @@
             this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.postcode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.modify = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colEdit = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridClients)).BeginInit();
             this.SuspendLayout();
             // 
@@ -122,12 +122,13 @@
             this.email,
             this.address,
             this.postcode,
-            this.modify});
+            this.colEdit});
             this.gridClients.Location = new System.Drawing.Point(12, 74);
             this.gridClients.Name = "gridClients";
             this.gridClients.ReadOnly = true;
-            this.gridClients.Size = new System.Drawing.Size(743, 161);
+            this.gridClients.Size = new System.Drawing.Size(830, 161);
             this.gridClients.TabIndex = 14;
+            this.gridClients.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridClients_CellContentClick);
             // 
             // txtSearchDni
             // 
@@ -138,7 +139,7 @@
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(523, 14);
+            this.btnCreate.Location = new System.Drawing.Point(610, 12);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(232, 54);
             this.btnCreate.TabIndex = 24;
@@ -195,20 +196,21 @@
             this.postcode.Name = "postcode";
             this.postcode.ReadOnly = true;
             // 
-            // modify
+            // colEdit
             // 
-            this.modify.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.modify.HeaderText = "Acción";
-            this.modify.Name = "modify";
-            this.modify.ReadOnly = true;
-            this.modify.Text = "Modificar";
-            this.modify.UseColumnTextForButtonValue = true;
+            this.colEdit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colEdit.HeaderText = "Acción";
+            this.colEdit.MinimumWidth = 80;
+            this.colEdit.Name = "colEdit";
+            this.colEdit.ReadOnly = true;
+            this.colEdit.Text = "Modificar";
+            this.colEdit.UseColumnTextForButtonValue = true;
             // 
             // UpdateClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(767, 251);
+            this.ClientSize = new System.Drawing.Size(851, 251);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.txtSearchDni);
             this.Controls.Add(this.btnClear);
@@ -246,6 +248,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn email;
         private System.Windows.Forms.DataGridViewTextBoxColumn address;
         private System.Windows.Forms.DataGridViewTextBoxColumn postcode;
-        private System.Windows.Forms.DataGridViewButtonColumn modify;
+        private System.Windows.Forms.DataGridViewButtonColumn colEdit;
     }
 }

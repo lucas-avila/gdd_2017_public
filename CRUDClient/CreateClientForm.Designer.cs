@@ -109,11 +109,11 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(473, 60);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.Size = new System.Drawing.Size(39, 13);
             this.label1.TabIndex = 9;
-            this.label1.Text = "Crear cliente";
+            this.label1.Text = "Cliente";
             // 
-            // Form1
+            // CreateClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -127,7 +127,7 @@
             this.Controls.Add(this.txtLastName);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.txtDni);
-            this.Name = "Form1";
+            this.Name = "CreateClientForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
