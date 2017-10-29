@@ -81,7 +81,7 @@
             this.Controls.Add(this.reasonBox);
             this.Controls.Add(this.label1);
             this.Name = "ReasonForm";
-            this.Text = "Reason";
+            this.Text = "Razón";
             this.ResumeLayout(false);
             this.PerformLayout();
 
