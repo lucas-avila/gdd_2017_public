@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.CRUDRole;
 using PagoAgilFrba.CRUDBranch;
+using PagoAgilFrba.Refund;
 
 namespace PagoAgilFrba
 {
@@ -67,7 +68,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickDevoluciones(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new RefundView().Show();
         }
 
         private void onClickListadoEstadistico(object sender, EventArgs e){

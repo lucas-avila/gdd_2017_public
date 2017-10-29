@@ -93,7 +93,7 @@ CREATE TABLE GDD_FORK.Client (
 	cli_email nvarchar(255),
 	cli_address nvarchar(255) NOT NULL,
 	cli_postal_code nvarchar(255) NOT NULL,
-	CONSTRAINT Client_PK PRIMARY KEY (cli_dni))
+	CONSTRAINT Client_PK PRIMARY KEY (cli_id))
 GO
 
 CREATE TABLE GDD_FORK.Payment_Method (
@@ -112,14 +112,14 @@ GO
 CREATE TABLE GDD_FORK.Bill (
 	bill_id int identity NOT NULL,
 	bill_number numeric(18, 0) NOT NULL,
-	bill_cli_dni numeric(18, 0) NOT NULL,
+	bill_cli_id int NOT NULL,
 	bill_com_id int NOT NULL,
 	bill_inv_nro numeric(18, 0) NULL,
 	bill_date datetime NOT NULL, 
 	bill_total numeric(18, 2) NOT NULL,
 	bill_expiration datetime NOT NULL,
 	CONSTRAINT Bill_PK PRIMARY KEY (bill_id),
-	FOREIGN KEY (bill_cli_dni) REFERENCES GDD_FORK.Client(cli_dni),
+	FOREIGN KEY (bill_cli_id) REFERENCES GDD_FORK.Client(cli_id),
 	FOREIGN KEY (bill_com_id) REFERENCES GDD_FORK.Company(com_id),
 	FOREIGN KEY (bill_inv_nro) REFERENCES GDD_FORK.Invoice(inv_nro))
 GO
@@ -224,14 +224,15 @@ FROM gd_esquema.Maestra
 WHERE Rendicion_Nro is not null
 GO
 
-INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_dni,bill_com_id,bill_inv_nro,bill_date,bill_total,bill_expiration)
-SELECT DISTINCT (m.Nro_Factura),m.[Cliente-Dni],(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-',''))),
-		(SELECT DISTINCT (m2.Rendicion_Nro)
-		FROM gd_esquema.Maestra m2
-		WHERE m2.Nro_Factura = m.Nro_Factura
-		AND m2.Rendicion_Nro IS NOT NULL)
-,m.Factura_Fecha,m.Factura_Total,m.Factura_Fecha_Vencimiento
-FROM gd_esquema.Maestra m
+INSERT INTO GDD_FORK.Bill(bill_number,bill_cli_id,bill_com_id,bill_inv_nro,bill_date,bill_total,bill_expiration)
+SELECT DISTINCT (m.Nro_Factura),(SELECT cli_id FROM GDD_FORK.Client where cli_dni = m.[Cliente-Dni])
+,(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-',''))),
+  		(SELECT DISTINCT (m2.Rendicion_Nro)
+  		FROM gd_esquema.Maestra m2
+  		WHERE m2.Nro_Factura = m.Nro_Factura
+ 		AND m2.Rendicion_Nro IS NOT NULL)
+ ,m.Factura_Fecha,m.Factura_Total,m.Factura_Fecha_Vencimiento
+ FROM gd_esquema.Maestra m
 GO
 
 INSERT INTO GDD_FORK.Item(it_amount,it_bill_id,it_quantity)
@@ -641,4 +642,61 @@ AS
 				SET @answer = 0
 			END
 	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_bills_candidates_to_refund(@bill_number numeric(18,0) = NULL,@bill_com_id int = NULL, @bill_cli_id int = NULL, @bill_date datetime= NULL, @bill_expiration datetime= NULL)
+AS
+	BEGIN
+		SELECT bill_id,bill_number,bill_date,bill_expiration,bill_total,cli_name AS bill_client,com_name AS bill_company FROM GDD_FORK.Bill 
+		JOIN GDD_FORK.Company ON bill_com_id = com_id
+		JOIN GDD_FORK.Client ON bill_cli_id = cli_id
+		JOIN GDD_FORK.Payment ON pay_bill_id = bill_id
+		WHERE ((@bill_number is NULL) OR (bill_number like CONCAT('%',@bill_number,'%')))
+		AND ((@bill_date is NULL) OR CAST(bill_date AS DATE) = CAST(@bill_date AS DATE) )
+		AND ((@bill_expiration is NULL) OR CAST(bill_expiration AS DATE) = CAST(@bill_expiration AS DATE) )
+		AND ((@bill_com_id is NULL) OR (bill_com_id = @bill_com_id))
+		AND ((@bill_cli_id is NULL) OR (bill_cli_id = @bill_cli_id))
+		ORDER BY bill_number
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_bill_can_be_refunded(@bill_id int, @answer bit OUTPUT)
+AS
+	BEGIN
+		DECLARE @invoice int
+		SELECT @invoice = COUNT(*) FROM GDD_FORK.Bill WHERE bill_id = @bill_id AND bill_inv_nro IS NOT NULL
+
+		IF(@invoice > 0)
+			BEGIN
+				SET @answer = 0
+			END
+		ELSE
+			BEGIN
+				SET @answer = 1
+			END
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_refund_bill(@bill_id int, @ref_reason nvarchar(255))
+AS
+	BEGIN
+		DELETE FROM GDD_FORK.Payment
+		WHERE pay_bill_id = @bill_id
+		
+		INSERT INTO GDD_FORK.BillRefund (ref_reason) 
+		VALUES (@ref_reason)
+
+		DECLARE @ref_id int
+		SELECT @ref_id = SCOPE_IDENTITY()
+
+		INSERT INTO GDD_FORK.Bill_Refund (bill_id, refund_id)
+		VALUES (@bill_id, @ref_id)
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_search_client_combo
+AS
+BEGIN
+	SELECT * FROM GDD_FORK.Client
+END
 GO
