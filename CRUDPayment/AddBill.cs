@@ -39,6 +39,9 @@ namespace PagoAgilFrba.CRUDPayment{
                 MessageBox.Show("La compañía se encuentra inactiva", "Error");
                 return;
             }
+
+            //TODO check if client is inactive, similar as company
+
             form.addBill(bill);
             this.Hide();
         }
