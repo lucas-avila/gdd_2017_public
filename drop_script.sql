@@ -144,3 +144,30 @@ GO
 
 DROP PROCEDURE [GDD_FORK].[sp_comany_can_be_disable]
 GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_bills]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_can_edit_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_insert_update_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_delete_item]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_insert_update_item]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_items_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_client_combo]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_check_bill_number]
+GO

@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.CRUDRole;
 using PagoAgilFrba.CRUDBranch;
+using PagoAgilFrba.CRUDBill;
+using PagoAgilFrba.CRUDCompany;
 using PagoAgilFrba.Refund;
 
 namespace PagoAgilFrba
@@ -84,7 +86,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMFacturas(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new CRUDBillForm().Show();
         }
 
         private void onClickABMSucursal(object sender, EventArgs e){
@@ -92,7 +94,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMEmpresa(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new CRUDCompanyForm().Show();
         }
 
         private void onClickABMCliente(object sender, EventArgs e){
