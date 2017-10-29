@@ -275,7 +275,7 @@
             this.Controls.Add(this.btnClearFilters);
             this.Controls.Add(this.gridBill);
             this.Name = "CRUDBillForm";
-            this.Text = "CRUDBIllForm";
+            this.Text = "Facturas";
             ((System.ComponentModel.ISupportInitialize)(this.gridBill)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

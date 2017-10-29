@@ -40,7 +40,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(132, 85);
+            this.btnAdd.Location = new System.Drawing.Point(185, 85);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 2;
@@ -76,7 +76,7 @@
             0,
             0});
             this.numQuantity.Name = "numQuantity";
-            this.numQuantity.Size = new System.Drawing.Size(132, 20);
+            this.numQuantity.Size = new System.Drawing.Size(185, 20);
             this.numQuantity.TabIndex = 1;
             // 
             // label2
@@ -98,14 +98,14 @@
             0,
             131072});
             this.dbAmount.Name = "dbAmount";
-            this.dbAmount.Size = new System.Drawing.Size(132, 20);
+            this.dbAmount.Size = new System.Drawing.Size(185, 20);
             this.dbAmount.TabIndex = 6;
             // 
             // AddItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(227, 126);
+            this.ClientSize = new System.Drawing.Size(272, 126);
             this.Controls.Add(this.dbAmount);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numQuantity);
