@@ -1,85 +1,84 @@
-﻿using PagoAgilFrba.Mappers;
-using PagoAgilFrba.Model;
-using PagoAgilFrba.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using PagoAgilFrba.Utils;
+using PagoAgilFrba.Model;
+using PagoAgilFrba.Mappers;
+using PagoAgilFrba.Refund;
 
-namespace PagoAgilFrba.Refund
-{
-    public partial class RefundView : Form
-    {
-        public RefundView()
-        {
+namespace PagoAgilFrba.Refund{
+    public partial class RefundView : Form{
+        public RefundView(){
             InitializeComponent();
-            billsBox.DataSource = new List<Bill>();
-            setBillsBox();
+
+            setCmbCompany();
+            setCmbClient();
+            gridBill.AutoGenerateColumns = false;
         }
 
-        public void setBillsBox()
-        {
-            billsBox.Columns["id"].Visible = false;
-            billsBox.Columns["number"].DisplayIndex = 0;
-            billsBox.Columns["cli_dni"].DisplayIndex = 1;
-            billsBox.Columns["com_id"].Visible = false;
-            billsBox.Columns["total"].DisplayIndex = 2;
-
-            billsBox.Columns["number"].HeaderText = "Nro";
-            billsBox.Columns["cli_dni"].HeaderText = "Cliente D.N.I";
-            billsBox.Columns["total"].HeaderText = "Total";
-
-            billsBox.Columns["cli_dni"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            billsBox.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            billsBox.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            billsBox.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        private void setCmbCompany(){
+            cmbCompany.DataSource = StoreManager.getInstance().executeReadStore<Company>("sp_search_companies", new CompanyMapper());
+            cmbCompany.DisplayMember = "name";
+            cmbCompany.ValueMember = "id";
+            cmbCompany.SelectedItem = null;
         }
 
-        public void doSearch()
-        {
-            if (String.IsNullOrEmpty(dniBox.Text)  && String.IsNullOrEmpty(billNroBox.Text))
-            {
-                MessageBox.Show("Debe ingresar algún parámetro de búsqueda.", "Error");
-                return;
-            }
-            if(!dniBox.Text.All(Char.IsDigit) || !billNroBox.Text.All(Char.IsDigit))
-            {
-                MessageBox.Show("Debe ingresar solo números en los campos de búsqueda.", "Error");
-                return;
-            }
+        private void setCmbClient(){
+            cmbClient.DataSource = StoreManager.getInstance().executeReadStore<ClientCombo>("sp_search_client_combo",new ClientComboMapper());
+            cmbClient.DisplayMember = "name";
+            cmbClient.ValueMember = "id";
+            cmbClient.SelectedItem = null;
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e){
+            doSearch();
+        }
+
+        public void doSearch() {
             List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter("@cli_dni", Util.convertStringToNumber(dniBox.Text)));
-            parameters.Add(new Parameter("@bill_number", Util.convertStringToNumber(billNroBox.Text)));
-            billsBox.DataSource = StoreManager.getInstance().executeReadStore<Bill>("sp_search_bills", new BillMapper(), parameters);
-            setBillsBox();
+            parameters.Add(new Parameter("@bill_number", Util.convertStringToNumber(txtBillNumber.Text)));
+            parameters.Add(new Parameter("@bill_com_id", cmbCompany.SelectedValue));
+            parameters.Add(new Parameter("@bill_cli_id", cmbClient.SelectedValue));
+
+            if (dbDate.Checked) {
+                parameters.Add(new Parameter("@bill_date", dbDate.Value));
+            }
+
+            if (dbExpiration.Checked){
+                parameters.Add(new Parameter("@bill_expiration", dbExpiration.Value));
+            }
+
+            gridBill.DataSource = StoreManager.getInstance().executeReadStore<BillTable>("sp_search_bills_candidates_to_refund", new BillTableMapper(), parameters);
+
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
+        private void btnClearFilters_Click(object sender, EventArgs e){
+            txtBillNumber.Text = null;
+            cmbCompany.Text = null;
+            cmbClient.Text = null;
+            dbDate.Value = DateTime.Now;
+            dbDate.Checked = false;
+            dbExpiration.Value = DateTime.Now;
+            dbExpiration.Checked = false;
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            this.doSearch();
-        }
+        private void gridBill_CellContentClick(object sender, DataGridViewCellEventArgs e){
 
-        private void billsBox_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
-            {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0){
                 return;
             }
-            String columnName = this.billsBox.Columns[e.ColumnIndex].Name;
+            string columnName = this.gridBill.Columns[e.ColumnIndex].Name;
 
-            Bill selected = ((Bill)billsBox.Rows[e.RowIndex].DataBoundItem);
+            BillTable selected = ((BillTable)gridBill.Rows[e.RowIndex].DataBoundItem);
 
-            if ("refund".Equals(columnName))
-            {
+            if ("colRefund".Equals(columnName)){
+
                 if (canBeRefunded(selected))
                 {
                     new ReasonForm(selected.id, this).Show();
@@ -92,17 +91,12 @@ namespace PagoAgilFrba.Refund
             }
 
         }
-        
-        private Boolean canBeRefunded(Bill bill)
+
+        private Boolean canBeRefunded(BillTable bill)
         {
             List<Parameter> parameters = new List<Parameter>();
             parameters.Add(new Parameter("@bill_id", bill.id));
             return Convert.ToBoolean(StoreManager.getInstance().getStoreProcedureResult("sp_bill_can_be_refunded", parameters));
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Hide();
         }
     }
 }

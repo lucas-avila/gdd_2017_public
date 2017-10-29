@@ -7,15 +7,15 @@ using PagoAgilFrba.Utils;
 
 namespace PagoAgilFrba.Mappers
 {
-    class BillMapper : StoreResultMapper<Bill>
+    class BillTableMapper : StoreResultMapper<BillTable>
     {
-        public Bill getMapped(Dictionary<string, object> row)
+        public BillTable getMapped(Dictionary<string, object> row)
         {
-            Bill bill = new Bill();
+            BillTable bill = new BillTable();
             bill.id = (int)row["bill_id"];
             bill.number = (Decimal)row["bill_number"];
-            bill.cli_id = (int)row["bill_cli_id"];
-            bill.com_id = (int)row["bill_com_id"];
+            bill.client = (String)row["bill_client"];
+            bill.company = (String)row["bill_company"];
             bill.total = (Decimal)row["bill_total"];
             bill.date = (DateTime)row["bill_date"];
             bill.expiration = (DateTime)row["bill_expiration"];
