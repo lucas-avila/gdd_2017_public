@@ -15,6 +15,7 @@ using PagoAgilFrba.CRUDBranch;
 using PagoAgilFrba.CRUDBill;
 using PagoAgilFrba.CRUDCompany;
 using PagoAgilFrba.CRUDPayment;
+using PagoAgilFrba.Refund;
 
 namespace PagoAgilFrba
 {
@@ -70,7 +71,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickDevoluciones(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new RefundView().Show();
         }
 
         private void onClickListadoEstadistico(object sender, EventArgs e){

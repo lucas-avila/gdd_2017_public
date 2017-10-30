@@ -31,8 +31,12 @@ namespace PagoAgilFrba.CRUDBill{
             initData();
             populateCombos();
 
-            if (!isNew){
+            if (!isNew)
+            {
+                this.Text = "Editar Factura";
                 setData();
+            }else{
+                this.Text = "Agregar Factura";
             }
         }
 
@@ -109,7 +113,7 @@ namespace PagoAgilFrba.CRUDBill{
                 return;
             }
 
-            if (dbDate.Value.CompareTo(dbExpiration.Value) >= 0) {
+            if (dbDate.Value.CompareTo(dbExpiration.Value) > 0) {
                 MessageBox.Show("La fecha de vencimiento debe ser posterior a la fecha de alta", "Error");
                 return;
             }
