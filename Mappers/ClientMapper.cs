@@ -20,6 +20,7 @@ namespace PagoAgilFrba.Mappers
             client.address = (String)row["cli_address"];
             client.birthday = (DateTime)row["cli_date_birth"];
             client.postCode = (String)row["cli_postal_code"];
+            client.active = (Boolean)row["cli_active"];
 
             return client;
         }

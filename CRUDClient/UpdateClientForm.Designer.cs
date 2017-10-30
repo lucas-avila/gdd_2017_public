@@ -38,9 +38,10 @@
             this.gridClients = new System.Windows.Forms.DataGridView();
             this.txtSearchDni = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
+            this.dni = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dni = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colActive = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -115,9 +116,10 @@
             this.gridClients.AllowUserToDeleteRows = false;
             this.gridClients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridClients.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dni,
             this.name,
             this.lastName,
-            this.dni,
+            this.colActive,
             this.birth,
             this.email,
             this.address,
@@ -147,6 +149,13 @@
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
+            // dni
+            // 
+            this.dni.DataPropertyName = "dni";
+            this.dni.HeaderText = "DNI";
+            this.dni.Name = "dni";
+            this.dni.ReadOnly = true;
+            // 
             // name
             // 
             this.name.DataPropertyName = "name";
@@ -161,12 +170,12 @@
             this.lastName.Name = "lastName";
             this.lastName.ReadOnly = true;
             // 
-            // dni
+            // colActive
             // 
-            this.dni.DataPropertyName = "dni";
-            this.dni.HeaderText = "DNI";
-            this.dni.Name = "dni";
-            this.dni.ReadOnly = true;
+            this.colActive.DataPropertyName = "active";
+            this.colActive.HeaderText = "Activo";
+            this.colActive.Name = "colActive";
+            this.colActive.ReadOnly = true;
             // 
             // birth
             // 
@@ -241,9 +250,10 @@
         private System.Windows.Forms.DataGridView gridClients;
         private System.Windows.Forms.TextBox txtSearchDni;
         private System.Windows.Forms.Button btnCreate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dni;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn lastName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dni;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colActive;
         private System.Windows.Forms.DataGridViewTextBoxColumn birth;
         private System.Windows.Forms.DataGridViewTextBoxColumn email;
         private System.Windows.Forms.DataGridViewTextBoxColumn address;

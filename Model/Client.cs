@@ -15,5 +15,6 @@ namespace PagoAgilFrba.Model
         public DateTime birthday { get; set; }
         public String postCode { get; set; }
         public Decimal dni { get; set; }
+        public Boolean active { get; set; }
     }
 }

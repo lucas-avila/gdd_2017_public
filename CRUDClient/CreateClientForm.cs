@@ -37,6 +37,10 @@ namespace PagoAgilFrba.CRUDClient
             {
                 this.Text = "Editar cliente";
                 txtName.Text = edit.name;
+                txtDni.Text = edit.dni.ToString();
+                txtLastName.Text = edit.lastName;
+                dtBirthday.Value = edit.birthday;
+                txtMail.Text = edit.email;
                 txtAddress.Text = edit.address;
                 txtPostcode.Text = edit.postCode;
                 this.isNew = false;
@@ -57,6 +61,7 @@ namespace PagoAgilFrba.CRUDClient
             else
             {
                 parameters.Add(new Parameter("@cli_id", edit.id));
+                parameters.Add(new Parameter("@cli_active", edit.active));
                 StoreManager.getInstance().executeNonQuery("sp_update_client", parameters);
             }
         }

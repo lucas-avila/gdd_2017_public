@@ -57,6 +57,14 @@ namespace PagoAgilFrba.CRUDClient
             {
                 (new CreateClientForm(new DelegateCUClient(this), selected)).Show();
             }
+
+            if ("colActive".Equals(columnName))
+            {
+                List<Parameter> parameters = new List<Parameter>();
+                parameters.Add(new Parameter("@cli_id", selected.id));
+                StoreManager.getInstance().executeNonQuery("sp_change_active_client", parameters);
+                doSearch();
+            }
         }
 
         private class DelegateCUClient : CreateClientForm.DelegateForm

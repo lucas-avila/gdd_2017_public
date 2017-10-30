@@ -93,6 +93,7 @@ CREATE TABLE GDD_FORK.Client (
 	cli_email nvarchar(255),
 	cli_address nvarchar(255) NOT NULL,
 	cli_postal_code nvarchar(255) NOT NULL,
+	cli_active bit NOT NULL DEFAULT 1,
 	CONSTRAINT Client_PK PRIMARY KEY (cli_dni))
 GO
 
@@ -518,7 +519,8 @@ CREATE PROCEDURE GDD_FORK.sp_update_client(@cli_id int,
 	@cli_date_birth datetime,
 	@cli_email nvarchar(255),
 	@cli_address nvarchar(255),
-	@cli_postal_code nvarchar(255))
+	@cli_postal_code nvarchar(255),
+	@cli_active bit)
 AS
 	BEGIN
 		UPDATE Client
@@ -528,7 +530,8 @@ AS
 					cli_date_birth = @cli_date_birth,
 					cli_email = @cli_email,
 					cli_address = @cli_address,
-					cli_postal_code = @cli_postal_code
+					cli_postal_code = @cli_postal_code,
+					cli_active = @cli_active
 				WHERE cli_id = @cli_id;
 	END
 GO
@@ -551,6 +554,14 @@ AS
 		and ((@cli_name = '') or (cli_name = @cli_name))
 		and ((@cli_last_name = '') or (cli_last_name = @cli_last_name));
 	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_change_active_client(@cli_id int)
+AS
+BEGIN
+	UPDATE GDD_FORK.Client set cli_active = (~cli_active) 
+	where cli_id = @cli_id
+END
 GO
 
 CREATE PROCEDURE GDD_FORK.sp_get_all_entries
