@@ -30,6 +30,11 @@ namespace PagoAgilFrba.CRUDPayment{
                 return;
             }
 
+            if (bill.billPayNro != null) {
+                MessageBox.Show("La factura ya se encuentra pagada", "Error");
+                return;
+            }
+
             if (bill.expiration.CompareTo(Util.getSysDate()) < 0){
                 MessageBox.Show("La factura se encuentra expirada", "Error");
                 return;
@@ -40,10 +45,17 @@ namespace PagoAgilFrba.CRUDPayment{
                 return;
             }
 
-            //TODO check if client is inactive, similar as company
+            if (clientInactive(bill.cli_id)){
+                MessageBox.Show("El cliente se encuentra inactivo", "Error");
+                return;
+            }
 
             form.addBill(bill);
             this.Hide();
+        }
+
+        private bool clientInactive(int cliId){
+            return !Convert.ToBoolean(StoreManager.getInstance().getStoreProcedureResult("sp_client_active", new List<Parameter> { new Parameter("@cli_id", cliId) }));
         }
 
         private bool companyInactive(int companyId){

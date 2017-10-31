@@ -86,7 +86,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.label1);
             this.Name = "AddBill";
-            this.Text = "Agregar Factura a Pago";
+            this.Text = "Agregar Factura";
             ((System.ComponentModel.ISupportInitialize)(this.numBill)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

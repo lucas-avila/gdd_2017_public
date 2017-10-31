@@ -93,6 +93,7 @@ CREATE TABLE GDD_FORK.Client (
 	cli_email nvarchar(255),
 	cli_address nvarchar(255) NOT NULL,
 	cli_postal_code nvarchar(255) NOT NULL,
+	cli_active bit NOT NULL DEFAULT 1,
 	CONSTRAINT Client_PK PRIMARY KEY (cli_id))
 GO
 
@@ -784,6 +785,15 @@ BEGIN
 	SELECT @answer=com_active
 	FROM GDD_FORK.Company
 	WHERE com_id = @com_id
+END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_client_active (@cli_id int, @answer bit OUTPUT)
+AS 
+BEGIN
+	SELECT @answer=cli_active
+	FROM GDD_FORK.Client
+	WHERE com_id = @cli_id
 END
 GO
 

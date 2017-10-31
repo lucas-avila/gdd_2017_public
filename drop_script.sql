@@ -181,6 +181,9 @@ GO
 DROP PROCEDURE [GDD_FORK].[sp_company_active]
 GO
 
+DROP PROCEDURE [GDD_FORK].[sp_client_active]
+GO
+
 DROP PROCEDURE [GDD_FORK].[sp_get_bill_by_number]
 GO
 
