@@ -739,6 +739,69 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE GDD_FORK.sp_search_bills_candidates_to_refund(@bill_number numeric(18,0) = NULL,@bill_com_id int = NULL, @bill_cli_id int = NULL, @bill_date datetime= NULL, @bill_expiration datetime= NULL)
+AS
+	BEGIN
+		SELECT bill_id,bill_number,bill_date,bill_expiration,bill_total,cli_name AS bill_client,com_name AS bill_company FROM GDD_FORK.Bill 
+		JOIN GDD_FORK.Company ON bill_com_id = com_id
+		JOIN GDD_FORK.Client ON bill_cli_id = cli_id
+		WHERE ((@bill_number is NULL) OR (bill_number like CONCAT('%',@bill_number,'%')))
+		AND ((@bill_date is NULL) OR CAST(bill_date AS DATE) = CAST(@bill_date AS DATE) )
+		AND ((@bill_expiration is NULL) OR CAST(bill_expiration AS DATE) = CAST(@bill_expiration AS DATE) )
+		AND ((@bill_com_id is NULL) OR (bill_com_id = @bill_com_id))
+		AND ((@bill_cli_id is NULL) OR (bill_cli_id = @bill_cli_id))
+		AND bill_pay_nro IS NOT NULL
+		ORDER BY bill_number
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_bill_can_be_refunded(@bill_id int, @answer bit OUTPUT)
+AS
+	BEGIN
+		DECLARE @invoice int
+		SELECT @invoice = COUNT(*) FROM GDD_FORK.Bill WHERE bill_id = @bill_id AND bill_inv_nro IS NOT NULL
+
+		IF(@invoice > 0)
+			BEGIN
+				SET @answer = 0
+			END
+		ELSE
+			BEGIN
+				SET @answer = 1
+			END
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_refund_bill(@bill_id int, @ref_reason nvarchar(255))
+AS
+	BEGIN
+		
+		DECLARE @pay_number numeric(18,0)
+		DECLARE @bill_total numeric(18,2)
+		
+		SELECT @pay_number=bill_pay_nro,@bill_total=bill_total FROM GDD_FORK.Bill
+		WHERE bill_id = @bill_id
+
+		UPDATE GDD_FORK.Bill SET bill_pay_nro = NULL 
+		WHERE bill_id = @bill_id
+
+		IF(EXISTS(SELECT * FROM GDD_FORK.Bill WHERE bill_pay_nro = @pay_number))
+			UPDATE GDD_FORK.Payment SET pay_total = pay_total-@bill_total 
+			WHERE pay_number = @pay_number 
+		ELSE
+			DELETE GDD_FORK.Payment WHERE pay_number = @pay_number
+		
+		INSERT INTO GDD_FORK.BillRefund (ref_reason) 
+		VALUES (@ref_reason)
+
+		DECLARE @ref_id int
+		SELECT @ref_id = SCOPE_IDENTITY()
+
+		INSERT INTO GDD_FORK.Bill_Refund (bill_id, refund_id)
+		VALUES (@bill_id, @ref_id)
+	END
+GO
+
 CREATE PROCEDURE GDD_FORK.sp_search_client_combo
 AS
 BEGIN

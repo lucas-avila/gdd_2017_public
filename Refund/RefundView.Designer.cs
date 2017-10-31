@@ -1,6 +1,6 @@
-﻿namespace PagoAgilFrba.CRUDBill
+﻿namespace PagoAgilFrba.Refund
 {
-    partial class CRUDBillForm
+    partial class RefundView
     {
         /// <summary>
         /// Required designer variable.
@@ -29,14 +29,6 @@
         private void InitializeComponent()
         {
             this.gridBill = new System.Windows.Forms.DataGridView();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCompany = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colClient = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colExpiration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEdit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnClearFilters = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,6 +41,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.dbExpiration = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCompany = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colClient = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colExpiration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRefund = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridBill)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,7 +69,7 @@
             this.colDate,
             this.colExpiration,
             this.colTotal,
-            this.colEdit});
+            this.colRefund});
             this.gridBill.Location = new System.Drawing.Point(12, 98);
             this.gridBill.MultiSelect = false;
             this.gridBill.Name = "gridBill";
@@ -79,70 +79,6 @@
             this.gridBill.Size = new System.Drawing.Size(704, 226);
             this.gridBill.TabIndex = 8;
             this.gridBill.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridBill_CellContentClick);
-            // 
-            // colName
-            // 
-            this.colName.DataPropertyName = "number";
-            this.colName.FillWeight = 105F;
-            this.colName.HeaderText = "Nro. Factura";
-            this.colName.Name = "colName";
-            this.colName.ReadOnly = true;
-            // 
-            // colCompany
-            // 
-            this.colCompany.DataPropertyName = "company";
-            this.colCompany.HeaderText = "Empresa";
-            this.colCompany.Name = "colCompany";
-            this.colCompany.ReadOnly = true;
-            // 
-            // colClient
-            // 
-            this.colClient.DataPropertyName = "client";
-            this.colClient.HeaderText = "Cliente";
-            this.colClient.Name = "colClient";
-            this.colClient.ReadOnly = true;
-            // 
-            // colDate
-            // 
-            this.colDate.DataPropertyName = "date";
-            this.colDate.HeaderText = "Fecha de Alta";
-            this.colDate.Name = "colDate";
-            this.colDate.ReadOnly = true;
-            // 
-            // colExpiration
-            // 
-            this.colExpiration.DataPropertyName = "expiration";
-            this.colExpiration.HeaderText = "Fecha de vencimiento";
-            this.colExpiration.Name = "colExpiration";
-            this.colExpiration.ReadOnly = true;
-            // 
-            // colTotal
-            // 
-            this.colTotal.DataPropertyName = "total";
-            this.colTotal.HeaderText = "Total";
-            this.colTotal.Name = "colTotal";
-            this.colTotal.ReadOnly = true;
-            // 
-            // colEdit
-            // 
-            this.colEdit.FillWeight = 70F;
-            this.colEdit.HeaderText = "";
-            this.colEdit.Name = "colEdit";
-            this.colEdit.ReadOnly = true;
-            this.colEdit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colEdit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colEdit.Text = "Editar";
-            this.colEdit.UseColumnTextForButtonValue = true;
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Location = new System.Drawing.Point(641, 43);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 7;
-            this.btnAdd.Text = "Agregar";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnSearch
             // 
@@ -255,11 +191,75 @@
             this.label5.TabIndex = 19;
             this.label5.Text = "Fecha de Vencimiento:";
             // 
-            // CRUDBillForm
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(14, 74);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(246, 13);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "Facturas no pagas no aparecerán en la búsqueda.";
+            // 
+            // colName
+            // 
+            this.colName.DataPropertyName = "number";
+            this.colName.FillWeight = 105F;
+            this.colName.HeaderText = "Nro. Factura";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            // 
+            // colCompany
+            // 
+            this.colCompany.DataPropertyName = "company";
+            this.colCompany.HeaderText = "Empresa";
+            this.colCompany.Name = "colCompany";
+            this.colCompany.ReadOnly = true;
+            // 
+            // colClient
+            // 
+            this.colClient.DataPropertyName = "client";
+            this.colClient.HeaderText = "Cliente";
+            this.colClient.Name = "colClient";
+            this.colClient.ReadOnly = true;
+            // 
+            // colDate
+            // 
+            this.colDate.DataPropertyName = "date";
+            this.colDate.HeaderText = "Fecha de Alta";
+            this.colDate.Name = "colDate";
+            this.colDate.ReadOnly = true;
+            // 
+            // colExpiration
+            // 
+            this.colExpiration.DataPropertyName = "expiration";
+            this.colExpiration.HeaderText = "Fecha de vencimiento";
+            this.colExpiration.Name = "colExpiration";
+            this.colExpiration.ReadOnly = true;
+            // 
+            // colTotal
+            // 
+            this.colTotal.DataPropertyName = "total";
+            this.colTotal.HeaderText = "Total";
+            this.colTotal.Name = "colTotal";
+            this.colTotal.ReadOnly = true;
+            // 
+            // colRefund
+            // 
+            this.colRefund.FillWeight = 70F;
+            this.colRefund.HeaderText = "";
+            this.colRefund.Name = "colRefund";
+            this.colRefund.ReadOnly = true;
+            this.colRefund.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colRefund.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colRefund.Text = "Reembolsar";
+            this.colRefund.UseColumnTextForButtonValue = true;
+            // 
+            // RefundView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(728, 333);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.dbExpiration);
             this.Controls.Add(this.label4);
@@ -270,12 +270,11 @@
             this.Controls.Add(this.txtBillNumber);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.btnClearFilters);
             this.Controls.Add(this.gridBill);
-            this.Name = "CRUDBillForm";
-            this.Text = "Facturas";
+            this.Name = "RefundView";
+            this.Text = "Devoluciones";
             ((System.ComponentModel.ISupportInitialize)(this.gridBill)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -285,7 +284,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView gridBill;
-        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnClearFilters;
         private System.Windows.Forms.Label label1;
@@ -298,12 +296,13 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DateTimePicker dbExpiration;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCompany;
         private System.Windows.Forms.DataGridViewTextBoxColumn colClient;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colExpiration;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
-        private System.Windows.Forms.DataGridViewButtonColumn colEdit;
+        private System.Windows.Forms.DataGridViewButtonColumn colRefund;
     }
 }
