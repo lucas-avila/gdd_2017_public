@@ -1,4 +1,5 @@
-﻿using PagoAgilFrba.Model;
+﻿using PagoAgilFrba.Mappers;
+using PagoAgilFrba.Model;
 using PagoAgilFrba.Utils;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace PagoAgilFrba.CRUDClient
         decimal dni;
         String name, lastName, address, email, postcode;
         DateTime birthday;
+        Boolean active;
 
         private DelegateForm delegateForm;
         private Client edit;
@@ -43,6 +45,7 @@ namespace PagoAgilFrba.CRUDClient
                 txtMail.Text = edit.email;
                 txtAddress.Text = edit.address;
                 txtPostcode.Text = edit.postCode;
+                chkActive.Checked = edit.active;
                 this.isNew = false;
             }
             else
@@ -54,6 +57,7 @@ namespace PagoAgilFrba.CRUDClient
 
         private void button1_Click(object sender, EventArgs e)
         {
+            validateParams();
             fillAttributes();
             List<Parameter> parameters = generateQueryParams();
             if (isNew)
@@ -61,8 +65,55 @@ namespace PagoAgilFrba.CRUDClient
             else
             {
                 parameters.Add(new Parameter("@cli_id", edit.id));
-                parameters.Add(new Parameter("@cli_active", edit.active));
                 StoreManager.getInstance().executeNonQuery("sp_update_client", parameters);
+            }
+            this.Hide();
+            this.delegateForm.afterUpdate();
+        }
+
+        private void validateParams()
+        {
+            if (String.IsNullOrEmpty(txtName.Text))
+            {
+                MessageBox.Show("Debe ingresar nombre", "Error");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(txtAddress.Text))
+            {
+                MessageBox.Show("Debe ingresar una direccion", "Error");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(txtLastName.Text))
+            {
+                MessageBox.Show("Debe ingresar un apellido", "Error");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(txtMail.Text))
+            {
+                MessageBox.Show("Debe ingresar un email", "Error");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(txtPostcode.Text) || Util.convertStringToNumber(txtPostcode.Text) == null)
+            {
+                MessageBox.Show("Debe un codigo postal (solo numerico)", "Error");
+                return;
+            }
+
+            if (!isNew)
+                return;
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(new Parameter("@cli_email", txtMail.Text));
+
+            Client result = StoreManager.getInstance().executeReadSingleResult<Client>("sp_exists_client_email", new ClientMapper(), parameters);
+
+            if (result != null)
+            {
+                MessageBox.Show("Debe ingresar un email que no esté en uso", "Error");
+                return;
             }
         }
 
@@ -76,6 +127,7 @@ namespace PagoAgilFrba.CRUDClient
             parameters.Add(new Parameter("@cli_email", email));
             parameters.Add(new Parameter("@cli_address", address));
             parameters.Add(new Parameter("@cli_postal_code", postcode));
+            parameters.Add(new Parameter("@cli_active", active));
             return parameters;
         }
 
@@ -89,6 +141,7 @@ namespace PagoAgilFrba.CRUDClient
             email = txtMail.Text;
             postcode = txtPostcode.Text;
             birthday = dtBirthday.Value;
+            active = chkActive.Checked;
         }
 
         public interface DelegateForm

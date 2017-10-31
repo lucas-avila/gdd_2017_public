@@ -82,5 +82,12 @@ namespace PagoAgilFrba.CRUDClient
                 form.doSearch();
             }
         }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            txtSearchDni.Text = null;
+            txtSearchLastname.Text = null;
+            txtSearchName.Text = null;
+        }
     }
 }

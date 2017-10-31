@@ -44,11 +44,13 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.chkActive = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtDni
             // 
             this.txtDni.Location = new System.Drawing.Point(84, 37);
+            this.txtDni.MaxLength = 18;
             this.txtDni.Name = "txtDni";
             this.txtDni.Size = new System.Drawing.Size(117, 20);
             this.txtDni.TabIndex = 0;
@@ -56,6 +58,7 @@
             // txtName
             // 
             this.txtName.Location = new System.Drawing.Point(84, 63);
+            this.txtName.MaxLength = 255;
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(117, 20);
             this.txtName.TabIndex = 1;
@@ -63,6 +66,7 @@
             // txtLastName
             // 
             this.txtLastName.Location = new System.Drawing.Point(84, 89);
+            this.txtLastName.MaxLength = 255;
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(117, 20);
             this.txtLastName.TabIndex = 2;
@@ -70,6 +74,7 @@
             // txtMail
             // 
             this.txtMail.Location = new System.Drawing.Point(84, 115);
+            this.txtMail.MaxLength = 255;
             this.txtMail.Name = "txtMail";
             this.txtMail.Size = new System.Drawing.Size(117, 20);
             this.txtMail.TabIndex = 3;
@@ -77,6 +82,7 @@
             // txtAddress
             // 
             this.txtAddress.Location = new System.Drawing.Point(84, 167);
+            this.txtAddress.MaxLength = 255;
             this.txtAddress.Name = "txtAddress";
             this.txtAddress.Size = new System.Drawing.Size(117, 20);
             this.txtAddress.TabIndex = 5;
@@ -84,6 +90,7 @@
             // txtPostcode
             // 
             this.txtPostcode.Location = new System.Drawing.Point(84, 193);
+            this.txtPostcode.MaxLength = 255;
             this.txtPostcode.Name = "txtPostcode";
             this.txtPostcode.Size = new System.Drawing.Size(117, 20);
             this.txtPostcode.TabIndex = 6;
@@ -97,9 +104,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(16, 220);
+            this.button1.Location = new System.Drawing.Point(84, 225);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(185, 23);
+            this.button1.Size = new System.Drawing.Size(117, 23);
             this.button1.TabIndex = 8;
             this.button1.Text = "Guardar";
             this.button1.UseVisualStyleBackColor = true;
@@ -177,11 +184,22 @@
             this.label8.TabIndex = 16;
             this.label8.Text = "Cod postal";
             // 
+            // chkActive
+            // 
+            this.chkActive.AutoSize = true;
+            this.chkActive.Location = new System.Drawing.Point(19, 229);
+            this.chkActive.Name = "chkActive";
+            this.chkActive.Size = new System.Drawing.Size(56, 17);
+            this.chkActive.TabIndex = 18;
+            this.chkActive.Text = "Activo";
+            this.chkActive.UseVisualStyleBackColor = true;
+            // 
             // CreateClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(211, 256);
+            this.ClientSize = new System.Drawing.Size(211, 264);
+            this.Controls.Add(this.chkActive);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -223,5 +241,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox chkActive;
     }
 }
