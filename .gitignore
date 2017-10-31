@@ -4,3 +4,4 @@ packages
 *.csproj
 *.sln
 *.suo
+App.config
