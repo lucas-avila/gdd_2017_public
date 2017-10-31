@@ -97,6 +97,7 @@
             // 
             // dtBirthday
             // 
+            this.dtBirthday.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtBirthday.Location = new System.Drawing.Point(84, 142);
             this.dtBirthday.Name = "dtBirthday";
             this.dtBirthday.Size = new System.Drawing.Size(117, 20);
