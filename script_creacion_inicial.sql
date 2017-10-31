@@ -856,7 +856,7 @@ AS
 BEGIN
 	SELECT @answer=cli_active
 	FROM GDD_FORK.Client
-	WHERE com_id = @cli_id
+	WHERE cli_id = @cli_id
 END
 GO
 
