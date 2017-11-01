@@ -1,7 +1,6 @@
 CREATE schema GDD_FORK
 GO
 
-
 CREATE TABLE GDD_FORK.Funcionality (
 	func_name varchar(100) NOT NULL, 
 	func_id int identity NOT NULL, 
@@ -75,7 +74,7 @@ CREATE TABLE GDD_FORK.Company (
 GO
 
 CREATE TABLE GDD_FORK.Invoice (
-	inv_nro numeric(18, 0) NOT NULL,
+	inv_nro numeric(18, 0) identity NOT NULL,
 	inv_date datetime NOT NULL,
 	inv_amount numeric(18, 2) NOT NULL,
 	inv_total numeric(18, 2) NOT NULL,
@@ -219,11 +218,15 @@ SELECT DISTINCT (REPLACE(Empresa_Cuit, '-', '')),
 FROM gd_esquema.Maestra
 GO
 
+SET IDENTITY_INSERT GDD_FORK.Invoice ON; 
+
 INSERT INTO GDD_FORK.Invoice (inv_nro,inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_id)
 SELECT DISTINCT(Rendicion_Nro),Rendicion_Fecha,ItemRendicion_Importe,Factura_Total,10,(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-','')))
 FROM gd_esquema.Maestra 
 WHERE Rendicion_Nro is not null
 GO
+
+SET IDENTITY_INSERT GDD_FORK.Invoice OFF; 
 
 SET IDENTITY_INSERT GDD_FORK.Payment ON;  
 GO 
@@ -882,4 +885,42 @@ BEGIN
 	FROM GDD_FORK.Bill
 	WHERE bill_number = @bill_number
 END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_data_invoice(@com_id int, @date datetime)
+AS
+	BEGIN 
+		SELECT SUM(bill_total) as TOTAL,COUNT(*) as QUANTITY FROM GDD_FORK.Bill
+		WHERE bill_com_id = @com_id
+		AND year(bill_date) = year(@date)
+		AND month(bill_date) = month(@date) 
+		AND bill_pay_nro IS NOT NULL
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_check_exist_invoice(@com_id int, @date datetime, @answer bit OUTPUT)
+AS
+	BEGIN 
+		IF (EXISTS(SELECT * FROM GDD_FORK.Invoice
+		WHERE inv_company_id = @com_id
+		AND year(inv_date) = year(@date)
+		AND month(inv_date) = month(@date) ) )
+			SET @answer = 1
+		ELSE
+			SET @answer = 0
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_insert_invoice(@inv_date datetime, @inv_amount numeric(18,2),@inv_total numeric(18,2),@inv_fee_percentage numeric(18,0),@inv_company_id int)
+AS
+	BEGIN
+		INSERT INTO GDD_FORK.Invoice(inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_id)
+		VALUES (@inv_date,@inv_amount,@inv_total,@inv_fee_percentage,@inv_company_id)
+		
+		UPDATE GDD_FORK.Bill SET bill_inv_nro = SCOPE_IDENTITY() 
+		WHERE bill_com_id = @inv_company_id
+		AND year(bill_date) = year(@inv_date)
+		AND month(bill_date) = month(@inv_date)
+
+	END
 GO

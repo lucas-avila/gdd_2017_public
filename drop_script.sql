@@ -192,3 +192,24 @@ GO
 
 DROP PROCEDURE [GDD_FORK].[sp_company_can_be_disable]
 GO
+
+DROP PROCEDURE [GDD_FORK].[sp_bill_can_be_refunded]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_change_active_client]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_exists_client_email]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_bills_candidates_to_refund]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_refund_bill]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_data_invoice]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_check_exist_invoice]
+GO

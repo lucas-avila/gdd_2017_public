@@ -81,7 +81,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickRendicionFacturas(object sender, EventArgs e){
-            new s().Show();
+            new InvoiceForm().Show();
         }
 
         private void onClickRegistroPago(object sender, EventArgs e){

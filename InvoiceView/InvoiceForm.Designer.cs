@@ -1,6 +1,6 @@
 ﻿namespace PagoAgilFrba.InvoiceView
 {
-    partial class s
+    partial class InvoiceForm
     {
         /// <summary>
         /// Required designer variable.
@@ -40,11 +40,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.numCantFacturas = new System.Windows.Forms.NumericUpDown();
+            this.numBills = new System.Windows.Forms.NumericUpDown();
             this.numAmount = new System.Windows.Forms.NumericUpDown();
             this.numTotal = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numPercentage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numCantFacturas)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBills)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTotal)).BeginInit();
             this.SuspendLayout();
@@ -70,8 +70,8 @@
             // 
             this.numPercentage.Location = new System.Drawing.Point(120, 89);
             this.numPercentage.Maximum = new decimal(new int[] {
-            1874919423,
-            2328306,
+            99,
+            0,
             0,
             0});
             this.numPercentage.Name = "numPercentage";
@@ -160,19 +160,29 @@
             this.label7.TabIndex = 13;
             this.label7.Text = "Comision:";
             // 
-            // numCantFacturas
+            // numBills
             // 
-            this.numCantFacturas.Enabled = false;
-            this.numCantFacturas.Location = new System.Drawing.Point(120, 118);
-            this.numCantFacturas.Name = "numCantFacturas";
-            this.numCantFacturas.ReadOnly = true;
-            this.numCantFacturas.Size = new System.Drawing.Size(228, 20);
-            this.numCantFacturas.TabIndex = 14;
+            this.numBills.Enabled = false;
+            this.numBills.Location = new System.Drawing.Point(120, 118);
+            this.numBills.Maximum = new decimal(new int[] {
+            1569325055,
+            23283064,
+            0,
+            0});
+            this.numBills.Name = "numBills";
+            this.numBills.ReadOnly = true;
+            this.numBills.Size = new System.Drawing.Size(228, 20);
+            this.numBills.TabIndex = 14;
             // 
             // numAmount
             // 
             this.numAmount.Enabled = false;
             this.numAmount.Location = new System.Drawing.Point(120, 146);
+            this.numAmount.Maximum = new decimal(new int[] {
+            1569325055,
+            23283064,
+            0,
+            0});
             this.numAmount.Name = "numAmount";
             this.numAmount.ReadOnly = true;
             this.numAmount.Size = new System.Drawing.Size(228, 20);
@@ -182,19 +192,24 @@
             // 
             this.numTotal.Enabled = false;
             this.numTotal.Location = new System.Drawing.Point(120, 174);
+            this.numTotal.Maximum = new decimal(new int[] {
+            -1981284353,
+            -1966660860,
+            0,
+            131072});
             this.numTotal.Name = "numTotal";
             this.numTotal.ReadOnly = true;
             this.numTotal.Size = new System.Drawing.Size(228, 20);
             this.numTotal.TabIndex = 16;
             // 
-            // s
+            // InvoiceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 242);
             this.Controls.Add(this.numTotal);
             this.Controls.Add(this.numAmount);
-            this.Controls.Add(this.numCantFacturas);
+            this.Controls.Add(this.numBills);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -207,10 +222,10 @@
             this.Controls.Add(this.numPercentage);
             this.Controls.Add(this.cmbCompany);
             this.Controls.Add(this.label1);
-            this.Name = "s";
+            this.Name = "InvoiceForm";
             this.Text = "Rendicion";
             ((System.ComponentModel.ISupportInitialize)(this.numPercentage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numCantFacturas)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBills)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTotal)).EndInit();
             this.ResumeLayout(false);
@@ -232,7 +247,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown numCantFacturas;
+        private System.Windows.Forms.NumericUpDown numBills;
         private System.Windows.Forms.NumericUpDown numAmount;
         private System.Windows.Forms.NumericUpDown numTotal;
     }
