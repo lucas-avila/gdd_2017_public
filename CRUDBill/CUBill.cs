@@ -152,7 +152,7 @@ namespace PagoAgilFrba.CRUDBill{
 
             List<Parameter> parameters = getParametersSaveBill();
 
-            int? pk = StoreManager.getInstance().executeNonQueryResultPK("sp_insert_update_bill", parameters);
+            int? pk = StoreManager.getInstance().executeNonQueryResultPKInt("sp_insert_update_bill", parameters);
 
             if (pk.HasValue) {
                 bill.id = pk.Value;

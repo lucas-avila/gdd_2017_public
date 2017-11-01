@@ -7,22 +7,7 @@ GO
 DROP TABLE GDD_FORK.Role
 GO
 
-DROP TABLE GDD_FORK.Payment
-GO
-
-DROP TABLE GDD_FORK.Payment_Method
-GO
-
 DROP TABLE GDD_FORK.Users
-GO
-
-DROP TABLE GDD_FORK.Funcionality
-GO
-
-DROP TABLE GDD_FORK.Branch_user
-GO
-
-DROP TABLE GDD_FORK.Branch
 GO
 
 DROP TABLE GDD_FORK.Item
@@ -35,6 +20,21 @@ DROP TABLE GDD_FORK.BillRefund
 GO
 
 DROP TABLE GDD_FORK.Bill
+GO
+
+DROP TABLE GDD_FORK.Payment
+GO
+
+DROP TABLE GDD_FORK.Payment_Method
+GO
+
+DROP TABLE GDD_FORK.Funcionality
+GO
+
+DROP TABLE GDD_FORK.Branch_user
+GO
+
+DROP TABLE GDD_FORK.Branch
 GO
 
 DROP TABLE GDD_FORK.Invoice
@@ -170,4 +170,28 @@ DROP PROCEDURE [GDD_FORK].[sp_search_client_combo]
 GO
 
 DROP PROCEDURE [GDD_FORK].[sp_check_bill_number]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_add_payment]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_update_bill_payment]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_company_active]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_client_active]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_bill_by_number]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_get_bill_by_number]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_search_payment_methods]
+GO
+
+DROP PROCEDURE [GDD_FORK].[sp_company_can_be_disable]
 GO

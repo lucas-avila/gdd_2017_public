@@ -19,6 +19,9 @@ namespace PagoAgilFrba.Mappers
             bill.total = (Decimal)row["bill_total"];
             bill.date = (DateTime)row["bill_date"];
             bill.expiration = (DateTime)row["bill_expiration"];
+            if (row["bill_pay_nro"] != null && !String.IsNullOrEmpty(row["bill_pay_nro"].ToString()) ){
+                bill.billPayNro = (Decimal)row["bill_pay_nro"];
+            }
 
             return bill;
         }

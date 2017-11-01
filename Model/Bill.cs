@@ -15,6 +15,7 @@ namespace PagoAgilFrba.Model
         public Decimal total { get; set; }
         public DateTime date { get; set; }
         public DateTime expiration { get; set; }
+        public Decimal? billPayNro { get; set; }
 
     }
 }
