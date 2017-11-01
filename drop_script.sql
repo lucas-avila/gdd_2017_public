@@ -213,3 +213,6 @@ GO
 
 DROP PROCEDURE [GDD_FORK].[sp_check_exist_invoice]
 GO
+
+DROP PROCEDURE [GDD_FORK].[sp_insert_invoice]
+GO
