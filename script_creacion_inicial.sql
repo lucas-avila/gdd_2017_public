@@ -74,7 +74,7 @@ CREATE TABLE GDD_FORK.Company (
 GO
 
 CREATE TABLE GDD_FORK.Invoice (
-	inv_nro numeric(18, 0) NOT NULL,
+	inv_nro numeric(18, 0) identity NOT NULL,
 	inv_date datetime NOT NULL,
 	inv_amount numeric(18, 2) NOT NULL,
 	inv_total numeric(18, 2) NOT NULL,
@@ -218,11 +218,15 @@ SELECT DISTINCT (REPLACE(Empresa_Cuit, '-', '')),
 FROM gd_esquema.Maestra
 GO
 
+SET IDENTITY_INSERT GDD_FORK.Invoice ON; 
+
 INSERT INTO GDD_FORK.Invoice (inv_nro,inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_id)
 SELECT DISTINCT(Rendicion_Nro),Rendicion_Fecha,ItemRendicion_Importe,Factura_Total,10,(SELECT com_id FROM GDD_FORK.Company WHERE com_cuit = (REPLACE(Empresa_Cuit ,'-','')))
 FROM gd_esquema.Maestra 
 WHERE Rendicion_Nro is not null
 GO
+
+SET IDENTITY_INSERT GDD_FORK.Invoice OFF; 
 
 SET IDENTITY_INSERT GDD_FORK.Payment ON;  
 GO 
@@ -503,7 +507,8 @@ CREATE PROCEDURE GDD_FORK.sp_create_client(@cli_dni numeric(18, 0),
 	@cli_date_birth datetime,
 	@cli_email nvarchar(255),
 	@cli_address nvarchar(255),
-	@cli_postal_code nvarchar(255))
+	@cli_postal_code nvarchar(255),
+	@cli_active bit)
 AS
 	BEGIN
 		INSERT INTO Client (cli_dni,
@@ -512,14 +517,16 @@ AS
 							cli_date_birth,
 							cli_email,
 							cli_address,
-							cli_postal_code)
+							cli_postal_code,
+							cli_active)
 				VALUES (@cli_dni,
 						@cli_name,
 						@cli_last_name,
 						@cli_date_birth,
 						@cli_email,
 						@cli_address,
-						@cli_postal_code);
+						@cli_postal_code,
+						@cli_active);
 
 	END
 GO
@@ -531,7 +538,8 @@ CREATE PROCEDURE GDD_FORK.sp_update_client(@cli_id int,
 	@cli_date_birth datetime,
 	@cli_email nvarchar(255),
 	@cli_address nvarchar(255),
-	@cli_postal_code nvarchar(255))
+	@cli_postal_code nvarchar(255),
+	@cli_active bit)
 AS
 	BEGIN
 		UPDATE Client
@@ -541,7 +549,8 @@ AS
 					cli_date_birth = @cli_date_birth,
 					cli_email = @cli_email,
 					cli_address = @cli_address,
-					cli_postal_code = @cli_postal_code
+					cli_postal_code = @cli_postal_code,
+					cli_active = @cli_active
 				WHERE cli_id = @cli_id;
 	END
 GO
@@ -554,16 +563,34 @@ AS
 	END
 GO
 
-CREATE PROCEDURE GDD_FORK.sp_select_client(@cli_dni numeric(18,0),
-				@cli_name nvarchar(255),
-				@cli_last_name nvarchar(255))
+CREATE PROCEDURE GDD_FORK.sp_select_client(@cli_dni numeric(18,0) = NULL,
+				@cli_name nvarchar(255) = NULL ,
+				@cli_last_name nvarchar(255) = NULL)
 AS
 	BEGIN
-		SELECT * FROM Client
-		WHERE ((@cli_dni is null) or (cli_dni = @cli_dni))
-		and ((@cli_name = '') or (cli_name = @cli_name))
-		and ((@cli_last_name = '') or (cli_last_name = @cli_last_name));
+		SELECT * FROM GDD_FORK.Client
+		WHERE ((@cli_name = '') or ( cli_name like '%'+@cli_name+'%' ))
+		and ((@cli_last_name = '') or ( cli_last_name  like '%'+@cli_last_name+'%' ))
+		and ((@cli_dni is null) or ( cli_dni = @cli_dni ));
 	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_exists_client_email(@cli_email nvarchar(255),@cli_id int = NULL)
+AS
+	BEGIN
+		SELECT * FROM GDD_FORK.Client
+		WHERE (cli_email = @cli_email) 
+		AND ((@cli_id IS NULL) OR (cli_id != @cli_id))
+	END
+GO
+
+
+CREATE PROCEDURE GDD_FORK.sp_change_active_client(@cli_id int)
+AS
+BEGIN
+	UPDATE GDD_FORK.Client set cli_active = (~cli_active) 
+	where cli_id = @cli_id
+END
 GO
 
 CREATE PROCEDURE GDD_FORK.sp_get_all_entries
@@ -867,4 +894,42 @@ BEGIN
 	FROM GDD_FORK.Bill
 	WHERE bill_number = @bill_number
 END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_get_data_invoice(@com_id int, @date datetime)
+AS
+	BEGIN 
+		SELECT SUM(bill_total) as TOTAL,COUNT(*) as QUANTITY FROM GDD_FORK.Bill
+		WHERE bill_com_id = @com_id
+		AND year(bill_date) = year(@date)
+		AND month(bill_date) = month(@date) 
+		AND bill_pay_nro IS NOT NULL
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_check_exist_invoice(@com_id int, @date datetime, @answer bit OUTPUT)
+AS
+	BEGIN 
+		IF (EXISTS(SELECT * FROM GDD_FORK.Invoice
+		WHERE inv_company_id = @com_id
+		AND year(inv_date) = year(@date)
+		AND month(inv_date) = month(@date) ) )
+			SET @answer = 1
+		ELSE
+			SET @answer = 0
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_insert_invoice(@inv_date datetime, @inv_amount numeric(18,2),@inv_total numeric(18,2),@inv_fee_percentage numeric(18,0),@inv_company_id int)
+AS
+	BEGIN
+		INSERT INTO GDD_FORK.Invoice(inv_date,inv_amount,inv_total,inv_fee_percentage,inv_company_id)
+		VALUES (@inv_date,@inv_amount,@inv_total,@inv_fee_percentage,@inv_company_id)
+		
+		UPDATE GDD_FORK.Bill SET bill_inv_nro = SCOPE_IDENTITY() 
+		WHERE bill_com_id = @inv_company_id
+		AND year(bill_date) = year(@inv_date)
+		AND month(bill_date) = month(@inv_date)
+
+	END
 GO

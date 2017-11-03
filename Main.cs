@@ -16,6 +16,8 @@ using PagoAgilFrba.CRUDBill;
 using PagoAgilFrba.CRUDCompany;
 using PagoAgilFrba.CRUDPayment;
 using PagoAgilFrba.Refund;
+using PagoAgilFrba.InvoiceView;
+using PagoAgilFrba.CRUDClient;
 
 namespace PagoAgilFrba
 {
@@ -79,7 +81,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickRendicionFacturas(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new InvoiceForm().Show();
         }
 
         private void onClickRegistroPago(object sender, EventArgs e){
@@ -99,7 +101,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickABMCliente(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new UpdateClientForm().Show();
         }
 
         private void onClickABMRole(object sender, EventArgs e){
