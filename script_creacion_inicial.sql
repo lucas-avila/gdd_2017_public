@@ -933,3 +933,17 @@ AS
 
 	END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_top_companies_by_percentage_bills(@first_date datetime, @last_date datetime)
+AS
+	BEGIN
+		select TOP 5 com_cuit, com_name, com_address, (count(bill_pay_nro)*100)/count(*) as value
+		from GDD_FORK.Company left join GDD_FORK.Bill
+		on bill_com_id = com_id
+		WHERE bill_date between @first_date and @last_date
+		GROUP BY com_cuit,com_name, com_address
+		ORDER BY (count(bill_pay_nro)*100)/count(*) DESC
+		
+	END
+GO
+

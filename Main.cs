@@ -18,6 +18,7 @@ using PagoAgilFrba.CRUDPayment;
 using PagoAgilFrba.Refund;
 using PagoAgilFrba.InvoiceView;
 using PagoAgilFrba.CRUDClient;
+using PagoAgilFrba.ListadoEstadistico;
 
 namespace PagoAgilFrba
 {
@@ -77,7 +78,7 @@ namespace PagoAgilFrba
         }
 
         private void onClickListadoEstadistico(object sender, EventArgs e){
-            MessageBox.Show("TODO");
+            new ListForm().Show();
         }
 
         private void onClickRendicionFacturas(object sender, EventArgs e){
