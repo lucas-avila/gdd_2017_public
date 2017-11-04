@@ -51,7 +51,7 @@
             this.cmbOptions.FormattingEnabled = true;
             this.cmbOptions.Items.AddRange(new object[] {
             "Companías con mayor porcentaje de facturas cobradas",
-            "Companías con mayor cantidad de rendiciones",
+            "Companías con mayor monto rendido",
             "Clientes con mayor porcentaje de facturas pagadas",
             "Clientes con mayor cantidad de pagos ejecutados"});
             this.cmbOptions.Location = new System.Drawing.Point(13, 30);
@@ -83,6 +83,7 @@
             // 
             // dtYear
             // 
+            this.dtYear.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtYear.Location = new System.Drawing.Point(45, 57);
             this.dtYear.Name = "dtYear";
             this.dtYear.Size = new System.Drawing.Size(111, 20);

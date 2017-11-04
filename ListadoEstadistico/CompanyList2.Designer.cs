@@ -42,12 +42,13 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(209, 13);
+            this.label1.Size = new System.Drawing.Size(163, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Companías segun cantidad de rendiciones";
+            this.label1.Text = "Companías segun monto rendido";
             // 
             // grid
             // 
+            this.grid.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
@@ -55,27 +56,33 @@
             this.colAddress,
             this.colValue});
             this.grid.Location = new System.Drawing.Point(12, 43);
+            this.grid.MultiSelect = false;
             this.grid.Name = "grid";
-            this.grid.Size = new System.Drawing.Size(429, 196);
+            this.grid.RowHeadersVisible = false;
+            this.grid.Size = new System.Drawing.Size(404, 196);
             this.grid.TabIndex = 2;
             // 
             // colName
             // 
+            this.colName.DataPropertyName = "name";
             this.colName.HeaderText = "Nombre";
             this.colName.Name = "colName";
             // 
             // colCuit
             // 
+            this.colCuit.DataPropertyName = "cuit";
             this.colCuit.HeaderText = "Cuit";
             this.colCuit.Name = "colCuit";
             // 
             // colAddress
             // 
+            this.colAddress.DataPropertyName = "address";
             this.colAddress.HeaderText = "Direccion";
             this.colAddress.Name = "colAddress";
             // 
             // colValue
             // 
+            this.colValue.DataPropertyName = "value";
             this.colValue.HeaderText = "Cantidad de rendiciones";
             this.colValue.Name = "colValue";
             // 
@@ -83,7 +90,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(452, 254);
+            this.ClientSize = new System.Drawing.Size(434, 254);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.grid);
             this.Name = "CompanyList2";

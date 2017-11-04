@@ -48,6 +48,7 @@
             // 
             // grid
             // 
+            this.grid.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
@@ -55,27 +56,33 @@
             this.colDni,
             this.colValue});
             this.grid.Location = new System.Drawing.Point(12, 40);
+            this.grid.MultiSelect = false;
             this.grid.Name = "grid";
-            this.grid.Size = new System.Drawing.Size(429, 196);
+            this.grid.RowHeadersVisible = false;
+            this.grid.Size = new System.Drawing.Size(405, 196);
             this.grid.TabIndex = 2;
             // 
             // colName
             // 
+            this.colName.DataPropertyName = "name";
             this.colName.HeaderText = "Nombre";
             this.colName.Name = "colName";
             // 
             // colLastName
             // 
+            this.colLastName.DataPropertyName = "lastName";
             this.colLastName.HeaderText = "Apellido";
             this.colLastName.Name = "colLastName";
             // 
             // colDni
             // 
-            this.colDni.HeaderText = "DNI";
+            this.colDni.DataPropertyName = "email";
+            this.colDni.HeaderText = "Email";
             this.colDni.Name = "colDni";
             // 
             // colValue
             // 
+            this.colValue.DataPropertyName = "value";
             this.colValue.HeaderText = "Porcentaje de facturas";
             this.colValue.Name = "colValue";
             // 
@@ -83,7 +90,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(453, 248);
+            this.ClientSize = new System.Drawing.Size(427, 248);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.grid);
             this.Name = "ClientList1";

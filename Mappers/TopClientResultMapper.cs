@@ -15,7 +15,7 @@ namespace PagoAgilFrba.Mappers
             TopClientResult top = new TopClientResult();
             top.name = (String)row["cli_name"];
             top.lastName = (String)row["cli_last_name"];
-            top.dni = (int)row["cli_dni"];
+            top.email = (String)row["cli_email"];
             top.value = (int)row["value"];
 
             return top;

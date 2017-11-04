@@ -48,6 +48,7 @@
             // 
             // grid
             // 
+            this.grid.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
@@ -55,27 +56,33 @@
             this.colAddress,
             this.colValue});
             this.grid.Location = new System.Drawing.Point(13, 37);
+            this.grid.MultiSelect = false;
             this.grid.Name = "grid";
-            this.grid.Size = new System.Drawing.Size(429, 203);
+            this.grid.RowHeadersVisible = false;
+            this.grid.Size = new System.Drawing.Size(403, 203);
             this.grid.TabIndex = 3;
             // 
             // colName
             // 
+            this.colName.DataPropertyName = "name";
             this.colName.HeaderText = "Nombre";
             this.colName.Name = "colName";
             // 
             // colCuit
             // 
+            this.colCuit.DataPropertyName = "cuit";
             this.colCuit.HeaderText = "Cuit";
             this.colCuit.Name = "colCuit";
             // 
             // colAddress
             // 
+            this.colAddress.DataPropertyName = "address";
             this.colAddress.HeaderText = "Direccion";
             this.colAddress.Name = "colAddress";
             // 
             // colValue
             // 
+            this.colValue.DataPropertyName = "value";
             this.colValue.HeaderText = "Porcentaje de facturas";
             this.colValue.Name = "colValue";
             // 
@@ -83,7 +90,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(454, 252);
+            this.ClientSize = new System.Drawing.Size(431, 252);
             this.Controls.Add(this.grid);
             this.Controls.Add(this.label1);
             this.Name = "CompanyList1";

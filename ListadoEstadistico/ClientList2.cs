@@ -17,6 +17,7 @@ namespace PagoAgilFrba.ListadoEstadistico
         public ClientList2(DateTime dt1, DateTime dt2)
         {
             InitializeComponent();
+            grid.AutoGenerateColumns = false;
             this.dt1 = dt1;
             this.dt2 = dt2;
             doSearch();

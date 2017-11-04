@@ -16,7 +16,7 @@ namespace PagoAgilFrba.Mappers
             top.name = (String)row["com_name"];
             top.address = (String)row["com_address"];
             top.cuit = (String)row["com_cuit"];
-            top.value = (int)row["value"];
+            top.value = Convert.ToDecimal(row["value"]);
 
             return top;
         }
