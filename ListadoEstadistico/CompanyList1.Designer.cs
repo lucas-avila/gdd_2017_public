@@ -87,7 +87,7 @@
             this.Controls.Add(this.grid);
             this.Controls.Add(this.label1);
             this.Name = "CompanyList1";
-            this.Text = "CompanyList1";
+            this.Text = "Empresas";
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

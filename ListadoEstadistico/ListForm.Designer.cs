@@ -63,10 +63,10 @@
             // 
             this.cmbTrimester.FormattingEnabled = true;
             this.cmbTrimester.Items.AddRange(new object[] {
-            "Companías con mayor porcentaje de facturas cobradas",
-            "Companías con mayor cantidad de rendiciones",
-            "Clientes con mayor porcentaje de facturas pagadas",
-            "Clientes con mayor cantidad de pagos ejecutados"});
+            "1er trimestre",
+            "2do trimestre",
+            "3er trimestre",
+            "4to trimestre"});
             this.cmbTrimester.Location = new System.Drawing.Point(222, 57);
             this.cmbTrimester.Name = "cmbTrimester";
             this.cmbTrimester.Size = new System.Drawing.Size(132, 21);
@@ -120,7 +120,7 @@
             this.Controls.Add(this.cmbOptions);
             this.Controls.Add(this.label1);
             this.Name = "ListForm";
-            this.Text = "ListForm";
+            this.Text = "Listado estadistico";
             this.ResumeLayout(false);
             this.PerformLayout();
 
