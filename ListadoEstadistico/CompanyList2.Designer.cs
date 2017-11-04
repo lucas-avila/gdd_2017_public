@@ -83,7 +83,7 @@
             // colValue
             // 
             this.colValue.DataPropertyName = "value";
-            this.colValue.HeaderText = "Cantidad de rendiciones";
+            this.colValue.HeaderText = "Monto rendido";
             this.colValue.Name = "colValue";
             // 
             // CompanyList2
