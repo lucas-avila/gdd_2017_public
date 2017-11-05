@@ -204,6 +204,10 @@ FROM gd_esquema.Maestra
 WHERE Sucursal_Nombre IS NOT NULL
 GO
 
+INSERT INTO GDD_FORK.Branch (branch_name, branch_address, branch_postal_code,branch_active)
+VALUES ('Sucursal N°3000','Av. Callao 1066',1233,1)
+GO
+
 INSERT INTO GDD_FORK.Payment_Method (paym_description)
 SELECT DISTINCT (FormaPagoDescripcion)
 FROM gd_esquema.Maestra
@@ -280,16 +284,26 @@ INSERT INTO GDD_FORK.Users (user_active,user_login_attempts,user_username,user_p
 VALUES (1,0,'pablo','26079e41910bcde04be636fbeecc9045379882b5ad3fe7f70b762436c6d98055')
 GO
 
+INSERT INTO GDD_FORK.Users (user_active,user_login_attempts,user_username,user_password)
+VALUES (1,0,'juan','ed08c290d7e22f7bb324b15cbadce35b0b348564fd2d5f95752388d86d71bcca')
+GO
+
 INSERT INTO GDD_FORK.Role (role_name,role_active)
 VALUES ('Administrador',1)
+GO
+
+INSERT INTO GDD_FORK.Role (role_name,role_active)
+VALUES ('Cobrador',1)
 GO
 
 INSERT INTO GDD_FORK.Role_Funcionality (role_id,func_id) 
 	SELECT (SELECT role_id FROM GDD_FORK.Role where role_name = 'Administrador'), func_id FROM GDD_FORK.Funcionality
 GO
 
-INSERT INTO GDD_FORK.Role (role_name,role_active)
-VALUES ('Cobrador',1)
+INSERT INTO GDD_FORK.Role_Funcionality (role_id,func_id) 
+	SELECT (SELECT role_id FROM GDD_FORK.Role where role_name = 'Cobrador'), func_id 
+	FROM GDD_FORK.Funcionality
+	WHERE func_name in ('ABM CLIENTE','ABM EMPRESA','ABM FACTURAS','REGISTRO PAGO','RENDICION FACTURAS','DEVOLUCIONES')
 GO
 
 INSERT INTO GDD_FORK.Role_user (user_id,role_id)
@@ -300,14 +314,21 @@ INSERT INTO GDD_FORK.Role_user (user_id,role_id)
 VALUES ('pablo', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Cobrador') )
 GO
 
+INSERT INTO GDD_FORK.Role_user (user_id,role_id)
+VALUES ('juan', (SELECT role_id FROM GDD_FORK.Role WHERE role_name = 'Cobrador') )
+GO
+
 INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
-VALUES ((SELECT branch_id FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'admin')
+(SELECT branch_id,'admin' FROM GDD_FORK.Branch )
 GO
 
 INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
 VALUES ((SELECT branch_id FROM GDD_FORK.Branch where branch_postal_code = 7210) ,'pablo')
 GO
 
+INSERT INTO GDD_FORK.Branch_user (branch_id,user_id)
+VALUES ((SELECT branch_id FROM GDD_FORK.Branch where branch_postal_code = 1233) ,'juan')
+GO
 
 --STORES PROCEDURES
 
