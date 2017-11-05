@@ -933,3 +933,53 @@ AS
 
 	END
 GO
+
+CREATE PROCEDURE GDD_FORK.sp_top_companies_by_percentage_bills(@first_date datetime, @last_date datetime)
+AS
+	BEGIN
+		select TOP 5 com_cuit, com_name, com_address, (count(bill_pay_nro)*100)/count(*) as value
+		from GDD_FORK.Company left join GDD_FORK.Bill
+		on bill_com_id = com_id
+		WHERE bill_date between @first_date and @last_date
+		GROUP BY com_cuit,com_name, com_address
+		ORDER BY (count(bill_pay_nro)*100)/count(*) DESC
+		
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_top_companies_by_quantity_invoices(@first_date datetime, @last_date datetime)
+AS
+	BEGIN
+		select TOP 5 com_cuit, com_name,com_address, sum(inv.inv_amount) as value from GDD_FORK.Invoice inv 
+		JOIN GDD_FORK.Company on inv.inv_company_id = com_id
+		WHERE inv.inv_date between @first_date and @last_date
+		GROUP BY inv.inv_company_id,com_cuit,com_name,com_address
+		ORDER BY sum(inv.inv_amount) DESC
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_top_clients_by_percentage_bills(@first_date datetime, @last_date datetime)
+AS
+	BEGIN
+		select TOP 5 cli_email, cli_name, cli_last_name,(count(bill_pay_nro)*100)/count(*) as value
+		from GDD_FORK.Client client 
+		left join GDD_FORK.Bill on bill_cli_id = cli_id
+		left join GDD_FORK.Payment on pay_number = bill_pay_nro
+		WHERE bill_date between @first_date and @last_date
+		GROUP BY bill_cli_id,cli_email,cli_name,cli_last_name
+		ORDER BY (count(bill_pay_nro)*100)/count(*) DESC
+	END
+GO
+
+CREATE PROCEDURE GDD_FORK.sp_top_clients_by_quantity_payments(@first_date datetime, @last_date datetime)
+AS
+	BEGIN
+		select TOP 5 cli_email, cli_name, cli_last_name, count(*) as value
+		from GDD_FORK.Bill join GDD_FORK.Payment 
+		on pay_number = bill_pay_nro
+		join GDD_FORK.Client client on bill_cli_id = cli_id
+		WHERE pay_date between @first_date and @last_date
+		GROUP BY bill_cli_id,cli_email,cli_name,cli_last_name
+		ORDER BY count(*) DESC
+	END
+GO
